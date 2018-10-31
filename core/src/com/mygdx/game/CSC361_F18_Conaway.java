@@ -6,7 +6,8 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-
+import com.badlogic.gdx.assets.AssetManager;
+import com.packtpub.libgdx.canyonbunny.game.Assets;
 import gameWorld.WorldController;
 import gameWorld.WorldRenderer;
 
@@ -19,6 +20,8 @@ public class CSC361_F18_Conaway extends ApplicationAdapter {
 	public void create () {
 		//Set Libgdx log level to DEBUG
 		Gdx.app.setLogLevel(Application.LOG_DEBUG);
+		//Load assets
+		gameWorld.Assets.instance.init(new AssetManager());
 		//Initialize controller and renderer
 		 worldController = new WorldController();
 		 worldRenderer = new WorldRenderer(worldController);
@@ -45,6 +48,7 @@ public class CSC361_F18_Conaway extends ApplicationAdapter {
 		batch.dispose();
 		img.dispose();
 		worldRenderer.dispose();
+		gameWorld.Assets.instance.dispose();
 	}
 	@Override 
 	public void resize(int width, int height){
