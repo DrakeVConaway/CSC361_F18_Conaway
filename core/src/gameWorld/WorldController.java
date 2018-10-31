@@ -46,7 +46,7 @@ public class WorldController implements InputProcessor {
 		// Create new array for 5 sprites
 		testSprites = new Sprite[5];
 		//Create a list of texture regions
-		Array<TextureRegion> regions = new Array<TextureRegion>
+		Array<TextureRegion> regions = new Array<TextureRegion>();
 		regions.add(Assets.instance.character.character);
 		regions.add(Assets.instance.book.book);
 		regions.add(Assets.instance.currency.currency);
