@@ -10,6 +10,8 @@ import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.InputProcessor;
 import utils.CameraHelper;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.utils.Array;
 /**
  * Keeps track of objects within the world, handles updates
  * Makes sure the renderer is able to draw objects
@@ -43,6 +45,11 @@ public class WorldController implements InputProcessor {
 	private void initTestObjects(){
 		// Create new array for 5 sprites
 		testSprites = new Sprite[5];
+		//Create a list of texture regions
+		Array<TextureRegion> regions = new Array<TextureRegion>
+		regions.add(Assets.instance.character.character);
+		regions.add(Assets.instance.book.book);
+		regions.add(Assets.instance.currency.currency);
 		// Create empty POT-sized Pixmap with 8 bit RGBA pixel data
 		int width = 32;
 		int height = 32;
