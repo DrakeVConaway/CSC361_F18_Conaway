@@ -2,17 +2,12 @@ package gameWorld;
 /**
  * Assets for the new game
  */
-import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Gdx; 
 import com.badlogic.gdx.assets.AssetDescriptor;
 import com.badlogic.gdx.assets.AssetErrorListener;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.utils.Disposable;
-
-import gameWorld.Assets.AssetCharacter.AssetCurrency;
-import gameWorld.Assets.AssetCharacter.AssetCurrency.AssetBookOfPain;
-import gameWorld.Assets.AssetCharacter.AssetLevelDecoration;
-import gameWorld.Assets.AssetCharacter.AssetRock;
 import utils.Constants;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasRegion;
 import com.badlogic.gdx.graphics.Texture;
@@ -44,8 +39,9 @@ public class Assets implements Disposable, AssetErrorListener {
 	    + assetManager.getAssetNames().size);
 	for (String a : assetManager.getAssetNames())
 	    Gdx.app.debug(TAG, "asset: " + a);
-   }
-   Texture atlas =
+   
+   
+   TextureAtlas atlas =
 		   assetManager.get(Constants.TEXTURE_ATLAS_OBJECTS);
    
    //enable texture filtering for smoother pixels
@@ -57,6 +53,7 @@ public class Assets implements Disposable, AssetErrorListener {
    currency = new AssetCurrency(atlas);
    book = new AssetBookOfPain(atlas);
    levelDecoration = new AssetLevelDecoration(atlas);
+   }
    /**
     * Class for the asset managing of main character
     * sprite
@@ -67,8 +64,9 @@ public class Assets implements Disposable, AssetErrorListener {
 	   public final AtlasRegion character;
 	   
 	   public AssetCharacter(TextureAtlas atlas){
-		   head =atlas.findRegion("character");
+		   character =atlas.findRegion("character");
 	   }
+   }
 	
 	public class AssetRock{
 		public final AtlasRegion edge;
@@ -85,7 +83,7 @@ public class Assets implements Disposable, AssetErrorListener {
 		public AssetCurrency(TextureAtlas atlas){
 			currency = atlas.findRegion("currency");
 		}
-		
+	}
 		public class AssetBookOfPain{
 			public final AtlasRegion book;
 			
@@ -93,7 +91,7 @@ public class Assets implements Disposable, AssetErrorListener {
 				book = atlas.findRegion("book");
 			}
 		}
-	}
+	
 	
 	public class AssetLevelDecoration {
 		public final AtlasRegion cloud01;
@@ -113,7 +111,7 @@ public class Assets implements Disposable, AssetErrorListener {
 		 }
 		}
 	
-   }
+   
 	@Override
 	public void error(AssetDescriptor asset, Throwable throwable) {
 		Gdx.app.error(TAG, "Couldn't load asset '"+ 
