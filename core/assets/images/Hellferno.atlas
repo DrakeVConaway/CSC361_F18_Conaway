@@ -1,0 +1,27 @@
+
+Hellferno.png
+size: 1024,1024
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+Book_of_Pain
+  rotate: false
+  xy: 2, 376
+  size: 576, 576
+  orig: 576, 576
+  offset: 0, 0
+  index: -1
+Papa_Game
+  rotate: false
+  xy: 2, 2
+  size: 276, 372
+  orig: 276, 372
+  offset: 0, 0
+  index: -1
+Souls_Game
+  rotate: false
+  xy: 580, 772
+  size: 280, 180
+  orig: 280, 180
+  offset: 0, 0
+  index: -1
