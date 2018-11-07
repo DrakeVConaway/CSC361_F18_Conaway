@@ -6,7 +6,7 @@ import com.mygdx.game.CSC361_F18_Conaway;
 import com.badlogic.gdx.tools.texturepacker.TexturePacker;
 import com.badlogic.gdx.tools.texturepacker.TexturePacker.Settings;
 public class DesktopLauncher {
-	private static boolean rebuildAtlas = true;
+	private static boolean rebuildAtlas = false;
 	private static boolean drawDebugOutline = true;
 	public static void main (String[] arg) {
 		if(rebuildAtlas){
@@ -15,11 +15,11 @@ public class DesktopLauncher {
 			settings.maxHeight = 1024;
 			settings.duplicatePadding = false;
 			settings.debug = drawDebugOutline;
-			TexturePacker.process(settings,  "assets-raw/images", "../CanyonBunny-android/assets/images",
-					"canyonbunny.pack");
+			TexturePacker.process(settings,  "assets-raw/images", "../core/assets/images",
+					"Hellferno.atlas");
 		}
 		LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
-		config.title = "CanyonBunny";
+		config.title = "Hellferno";
 		config.width = 800;
 		config.height = 480;
 		new LwjglApplication(new CSC361_F18_Conaway(), config);
