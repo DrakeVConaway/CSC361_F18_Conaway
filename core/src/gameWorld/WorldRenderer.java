@@ -40,7 +40,7 @@ public class WorldRenderer implements Disposable{
 	 */
 	public void render() {
 		renderWorld(batch);
-		renderGUI(batch);
+		renderGui(batch);
 	}
 	/**
 	 * Render the world,

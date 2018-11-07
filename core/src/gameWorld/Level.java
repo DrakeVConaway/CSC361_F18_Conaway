@@ -13,6 +13,7 @@ AbstractGameObject;
 
 import gameObjects.Mountains;
 import gameObjects.Rock;
+import gameObjects.WaterOverlay;
 //import gameObjects.WaterOverlay;
 public class Level {
   public static final String TAG = Level.class.getName();
@@ -26,7 +27,7 @@ public class Level {
   
   private int color;
    private BLOCK_TYPE(int r, int g, int b) {
-	   color = r<<24|g<<1|b<<8| 0xff;
+	   color = r<<24|g<<16|b<<8| 0xff;
    }
    
    public boolean sameColor(int color) {
@@ -120,11 +121,11 @@ public class Level {
    
    public void render(SpriteBatch batch) {
 	   //Draw mts
-	   mountains.redner(batch);
+	   mountains.render(batch);
 	   //Draw Rocks
 	   for(Rock rock : rocks)
 		   rock.render(batch);
 	   //Draw water overlay
-	   waterOverlay.render(batch);
+	  waterOverlay.render(batch);
    }
 }

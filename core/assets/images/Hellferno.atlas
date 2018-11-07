@@ -6,22 +6,63 @@ filter: Nearest,Nearest
 repeat: none
 Book_of_Pain
   rotate: false
-  xy: 2, 376
+  xy: 2, 229
   size: 576, 576
   orig: 576, 576
   offset: 0, 0
   index: -1
 Papa_Game
   rotate: false
-  xy: 2, 2
+  xy: 580, 433
   size: 276, 372
   orig: 276, 372
   offset: 0, 0
   index: -1
 Souls_Game
   rotate: false
-  xy: 580, 772
+  xy: 580, 251
   size: 280, 180
   orig: 280, 180
+  offset: 0, 0
+  index: -1
+mountain_left
+  rotate: false
+  xy: 2, 2
+  size: 1000, 225
+  orig: 1000, 225
+  offset: 0, 0
+  index: -1
+rock_edge
+  rotate: false
+  xy: 946, 449
+  size: 63, 356
+  orig: 63, 356
+  offset: 0, 0
+  index: -1
+rock_middle
+  rotate: false
+  xy: 858, 449
+  size: 86, 356
+  orig: 86, 356
+  offset: 0, 0
+  index: -1
+water_overlay
+  rotate: false
+  xy: 862, 287
+  size: 32, 160
+  orig: 32, 160
+  offset: 0, 0
+  index: -1
+
+Hellferno2.png
+size: 1024,256
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+mountain_right
+  rotate: false
+  xy: 2, 2
+  size: 1000, 225
+  orig: 1000, 225
   offset: 0, 0
   index: -1

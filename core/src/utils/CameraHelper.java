@@ -39,7 +39,7 @@ public class CameraHelper {
    /**
     * return target
     */
-   public AbsractGameObject getTarget(){
+   public AbstractGameObject getTarget(){
 	   return target;
    }
    /**
@@ -73,23 +73,13 @@ public class CameraHelper {
       * @return zoom
       */
      public float getZoom () { return zoom; }
-     /**
-      * set the target to
-      * @param target
-      */
-     public void setTarget (Sprite target) { this.target = target; }
-     /**
-      * @return target
-      */
-     public Sprite getTarget () { return target; }
+    
      /**
       * checker if cam has target
       * @return boolean
       */
      public boolean hasTarget () { return target != null; }
-     public boolean hasTarget (Sprite target) {
-         return hasTarget() && this.target.equals(target);
-     }
+    
      /**
       * apply changes to the
       * @param camera
