@@ -17,7 +17,7 @@ public class CameraHelper {
    
    private Vector2 position;
    private float zoom;
-   private Sprite target;
+   private AbstractGameObject target;
    
    public CameraHelper(){
 	   position = new Vector2();
@@ -27,8 +27,8 @@ public class CameraHelper {
    public void update(float deltaTime){
 	   if(!hasTarget()) return;
 	   
-	   position.x = target.getX() + target.origin.x;
-	   position.y = target.getY() + target.origin.y;
+	   position.x = target.position.x + target.origin.x;
+	   position.y = target.position.y + target.origin.y;
    }
    /**
     * Set camera target by location
