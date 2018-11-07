@@ -8,6 +8,8 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
+
+import gameObjects.AbstractGameObject;
 public class CameraHelper {
    private static final String TAG = CameraHelper.class.getName();
    
@@ -26,10 +28,27 @@ public class CameraHelper {
    public void update(float deltaTime){
 	   if(!hasTarget()) return;
 	   
-	   position.x = target.getX() + target.getOriginX();
-	   position.y = target.getY() + target.getOriginY();
+	   position.x = target.getX() + target.origin.x;
+	   position.y = target.getY() + target.origin.y;
    }
-   
+   /**
+    * Set camera target by location
+    */
+   public void setTarget(AbstractGameObject target){
+	   this.target = target;
+   }
+   /**
+    * return target
+    */
+   public AbsractGameObject getTarget(){
+	   return target;
+   }
+   /**
+    * boolean, does cam have a target?
+    */
+   public boolean hasTarget(AbstractGameObject target){
+	   return hasTarget() && this.target.equals(target);
+   }
    public void setPosition(float x,float y){
 	   this.position.set(x,y);
    }
