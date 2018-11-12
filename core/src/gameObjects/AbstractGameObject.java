@@ -23,7 +23,7 @@ public abstract class AbstractGameObject {
 		 position = new Vector2();
 		 dimension = new Vector2();
 		 origin = new Vector2();
-		 scale = new Vector2();
+		 scale = new Vector2(1,1);
 		 rotation = 0;
 	 }
 	 

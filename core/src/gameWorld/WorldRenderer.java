@@ -40,7 +40,7 @@ public class WorldRenderer implements Disposable{
 	 */
 	public void render() {
 		renderWorld(batch);
-		//renderGui(batch);
+		renderGui(batch);
 	}
 	/**
 	 * Render the world,
@@ -91,7 +91,7 @@ public class WorldRenderer implements Disposable{
 	 */
 	private void renderGuiScore (SpriteBatch batch) {
 		float x = -15;
-		float y = -15;
+		float y = -15;  //instance.currency.currency
 		batch.draw(Assets.instance.currency.currency,
 		x, y, 50, 50, 100, 100, 0.35f, -0.35f, 0);
 		Assets.instance.fonts.defaultBig.draw(batch,

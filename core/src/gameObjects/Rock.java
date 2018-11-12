@@ -60,6 +60,11 @@ public class Rock extends AbstractGameObject{
     			 scale.x,scale.y,rotation,reg.getRegionX(), reg.getRegionY(),
     			 reg.getRegionWidth(),reg.getRegionHeight(),false,false);
     	 
+//    	 batch.draw(reg.getTexture(),position.x+relX,position.y +relY,
+//    			 origin.x,origin.y,reg.getRegionWidth(),reg.getRegionHeight(),
+//    			 scale.x,scale.y,rotation,reg.getRegionX(), reg.getRegionY(),
+//    			 reg.getRegionWidth(),reg.getRegionHeight(),false,false);
+    	 
     	 //Draw middle
     	 relX=0;
     	 reg=regMiddle;

@@ -5,9 +5,11 @@ package gameObjects;
  * @author Drake Conaway
  *
  */
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.MathUtils;
+
 import gameWorld.Assets;
 public class Mountains extends AbstractGameObject{
 	
@@ -27,8 +29,7 @@ public class Mountains extends AbstractGameObject{
 	 */
 	private void init() {
 		dimension.set(10,2);
-		regMountainLeft =
-				Assets.instance.levelDecoration.mountainLeft;
+		regMountainLeft = Assets.instance.levelDecoration.mountainLeft;
 		regMountainRight=
 				Assets.instance.levelDecoration.mountainRight;
 		
@@ -54,12 +55,13 @@ public class Mountains extends AbstractGameObject{
 			mountainLength += MathUtils.ceil(0.5f + offsetX);
 			for (int i = 0; i < mountainLength; i++) {
 			 // mountain left
+
 			 reg = regMountainLeft;
 			 batch.draw(reg.getTexture(), origin.x + xRel, position.y +
 			  origin.y + yRel, origin.x, origin.y, dimension.x, dimension.y,
 			  scale.x, scale.y, rotation, reg.getRegionX(), reg.getRegionY(),
 			  reg.getRegionWidth(), reg.getRegionHeight(), false, false);
-			  xRel += dimension.x;
+			 
 			  
 			// mountain right
 			 reg = regMountainRight;
