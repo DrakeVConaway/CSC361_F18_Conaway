@@ -114,7 +114,7 @@ public class Assets implements Disposable, AssetErrorListener {
 		  cloud01 = atlas.findRegion("cloud01");
 		  cloud02 = atlas.findRegion("cloud02");
 		  cloud03 = atlas.findRegion("cloud03");
-		  mountainLeft = atlas.findRegion("mountain_left");
+		  mountainLeft = atlas.findRegion("mountain_left");	 
 		  mountainRight = atlas.findRegion("mountain_right");
 		  waterOverlay = atlas.findRegion("water_overlay");
 		 }
