@@ -22,12 +22,17 @@ public class CSC361_F18_Conaway extends ApplicationAdapter {
 		//Set Libgdx log level to DEBUG
 		Gdx.app.setLogLevel(Application.LOG_DEBUG);
 		//Load assets
-		gameWorld.Assets.instance.init(new AssetManager());
+		Assets.instance.init(new AssetManager());
 		//Initialize controller and renderer
 		 worldController = new WorldController();
 		 worldRenderer = new WorldRenderer(worldController);
 		batch = new SpriteBatch();
 		img = new Texture("badlogic.jpg");
+	}
+	@Override
+	public void resume() {
+		Assets.instance.init(new AssetManager());
+		//paused = false;
 	}
 
 	@Override
@@ -49,7 +54,7 @@ public class CSC361_F18_Conaway extends ApplicationAdapter {
 		batch.dispose();
 		img.dispose();
 		worldRenderer.dispose();
-		gameWorld.Assets.instance.dispose();
+		Assets.instance.dispose();
 	}
 	@Override 
 	public void resize(int width, int height){

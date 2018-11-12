@@ -28,6 +28,11 @@ public class Assets implements Disposable, AssetErrorListener {
    public AssetBookOfPain book;
    public AssetLevelDecoration levelDecoration;
    public AssetFonts fonts;
+  
+   /**
+    * Initialization 
+    * @param assetManager
+    */
    public void init(AssetManager assetManager){
 	   this.assetManager = assetManager;
 	// set asset manager error handler

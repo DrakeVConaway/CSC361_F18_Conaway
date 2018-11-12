@@ -5,9 +5,11 @@ package gameWorld;
  *
  */
 import com.badlogic.gdx.Gdx;
+
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.Array;
+
 import gameObjects.
 AbstractGameObject;
 
@@ -41,7 +43,6 @@ public class Level {
   
   //objects
   public Array<Rock>rocks;
-  
   //decoration
   public Mountains mountains;
   public WaterOverlay waterOverlay;
@@ -53,6 +54,7 @@ public class Level {
    private void init(String filename) {
 	   //objects
 	   rocks = new Array<Rock>();
+	   
 	   //load image file that represents level data
 	   Pixmap pixmap = new Pixmap(Gdx.files.internal(filename));
 	   //scan pixels from top-left to bottom-right
@@ -65,7 +67,7 @@ public class Level {
 			   float baseHeight = pixmap.getHeight() - pixelY;
 			   //get color of current pixel as 32-bit RGBA value
 			   int currentPixel = pixmap.getPixel(pixelX, pixelY);
-			   //find mathcing color val to identify block type
+			   //find matching color val to identify block type
 			   //point and create corresponding game obj if match
 			   
 			   //empty space

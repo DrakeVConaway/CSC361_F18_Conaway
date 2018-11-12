@@ -6,6 +6,7 @@ package gameObjects;
  *
  */
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import gameWorld.Assets;
 public class WaterOverlay extends AbstractGameObject{
@@ -27,6 +28,7 @@ public class WaterOverlay extends AbstractGameObject{
     	 
     	 regWaterOverlay=
     	Assets.instance.levelDecoration.waterOverlay;
+    	 origin.x = -dimension.x/2;
      }
    
 	@Override
