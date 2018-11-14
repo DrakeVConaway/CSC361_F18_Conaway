@@ -129,6 +129,6 @@ public class Level {
 	   for(Rock rock : rocks)
 		   rock.render(batch);
 	   //Draw water overlay
-	  //waterOverlay.render(batch);
+	  waterOverlay.render(batch);
    }
 }
