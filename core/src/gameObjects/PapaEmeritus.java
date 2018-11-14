@@ -92,7 +92,7 @@ public class PapaEmeritus extends AbstractGameObject{
 		return hasBookPowerup;
 	}
 	/**
-	 * Update mehtod for Papa
+	 * Update method for Papa
 	 */
 	@Override
 	public void render(SpriteBatch batch){
