@@ -9,6 +9,9 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.Array;
+import gameObjects.BookOfPain;
+import gameObjects.PapaEmeritus;
+import gameObjects.Soul;
 
 import gameObjects.
 AbstractGameObject;
@@ -19,6 +22,16 @@ import gameObjects.WaterOverlay;
 //import gameObjects.WaterOverlay;
 public class Level {
   public static final String TAG = Level.class.getName();
+  
+  //objects
+  public Array<Rock>rocks;
+  //decoration
+  public Mountains mountains;
+  public WaterOverlay waterOverlay;
+  public PapaEmeritus papaEmeritus;
+  public Array<Soul> souls;
+  public Array<BookOfPain> books;
+  
   
   public enum BLOCK_TYPE{
 	  EMPTY(0,0,0), //black
@@ -41,19 +54,18 @@ public class Level {
    }
   }
   
-  //objects
-  public Array<Rock>rocks;
-  //decoration
-  public Mountains mountains;
-  public WaterOverlay waterOverlay;
   
   public Level(String filename) {
 	  init(filename);
   }
   
    private void init(String filename) {
+	   //player character
+	   papaEmeritus = null;
 	   //objects
 	   rocks = new Array<Rock>();
+	   souls = new Array<Soul>();
+	   books = new Array<BookOfPain>();
 	   
 	   //load image file that represents level data
 	   Pixmap pixmap = new Pixmap(Gdx.files.internal(filename));
@@ -90,13 +102,27 @@ public class Level {
 			   }
 			   //player spawn point
 			   else if(BLOCK_TYPE.PLAYER_SPAWNPOINT.sameColor(currentPixel)) {
+				   obj = new PapaEmeritus();
+				   offsetHeight = -3.0f;
+				   obj.position.set(pixelX,baseHeight * obj.dimension.y +
+						   offsetHeight);
+				   papaEmeritus = (PapaEmeritus)obj;
 			   }
 			   //book of pain
 			   else if (BLOCK_TYPE.ITEM_BOOK.sameColor(currentPixel)) {
+				   obj = new BookOfPain();
+				   offsetHeight = -1.5f;
+				   obj.position.set(pixelX,baseHeight * obj.dimension.y
+				   + offsetHeight);
+				   books.add((BookOfPain)obj);
 			   }
 			   //souls
 			   else if(BLOCK_TYPE.ITEM_CURRENCY.sameColor(currentPixel)) {
-				   
+				   obj = new Soul();
+				   offsetHeight = -1.5f;
+				   obj.position.set(pixelX,baseHeight * obj.dimension.y
+				   + offsetHeight);
+				   souls.add((Soul)obj);
 			   }
 			   //unknown obj/pixel color
 			   else {
@@ -128,7 +154,25 @@ public class Level {
 	   //Draw Rocks
 	   for(Rock rock : rocks)
 		   rock.render(batch);
+	   //Draw Souls
+	   for(Soul soul :souls)
+		   soul.render(batch);
+	   //Draw Books
+	   for(BookOfPain book:books)
+		   book.render(batch);
+	   //Draw Papa
+	   papaEmeritus.render(batch);
+	   
 	   //Draw water overlay
 	  waterOverlay.render(batch);
    }
+   public void update (float deltaTime) {
+	   papaEmeritus.update(deltaTime);
+	   for(Rock rock : rocks)
+	   rock.update(deltaTime);
+	   for(Soul soul : souls)
+	   soul.update(deltaTime);
+	   for(BookOfPain book : books)
+		   book.update(deltaTime);
+}
 }

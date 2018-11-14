@@ -79,6 +79,7 @@ public class WorldController implements InputProcessor {
 	 */
 	public void update(float deltaTime) {
 		handleDebugInput(deltaTime);
+		level.update(deltaTime);
 		cameraHelper.update(deltaTime);
 	}
 
