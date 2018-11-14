@@ -74,33 +74,33 @@ public class WorldController implements InputProcessor {
 	
 	private void onCollisionPapaWithRock(Rock rock) {
 		PapaEmeritus papaEmeritus = level.papaEmeritus;
-		float heightDifference = Math.abs(papaEmeritus.position.y
-				- ( rock.position.y + rock.bounds.height));
-			if (heightDifference > 0.25f) {
-				boolean hitRightEdge = papaEmeritus.position.x > (
-			rock.position.x + rock.bounds.width / 2.0f);
-			if (hitRightEdge) {
-			 papaEmeritus.position.x = rock.position.x + rock.bounds.width;
-			} else {
-			papaEmeritus.position.x = rock.position.x -
-			papaEmeritus.bounds.width;
-				}
-				return;
-				}
-				switch (papaEmeritus.jumpState) {
-				 case GROUNDED:
-				  break;
-				 case FALLING:
-				 case JUMP_FALLING:
-				  papaEmeritus.position.y = rock.position.y +
-				  papaEmeritus.bounds.height + papaEmeritus.origin.y;
-				  papaEmeritus.jumpState = JUMP_STATE.GROUNDED;
-				break;
-				case JUMP_RISING:
-				  papaEmeritus.position.y = rock.position.y +
-				  papaEmeritus.bounds.height + papaEmeritus.origin.y;
-				break;
-			}
+//		//float heightDifference = Math.abs(papaEmeritus.position.y
+//			//	- ( rock.position.y + rock.bounds.height));
+//			//if (heightDifference > 0.25f) { 
+//			//	boolean hitLeftEdge = papaEmeritus.position.x > (
+//			//rock.position.x + rock.bounds.width / 2.0f);
+//			//if (hitLeftEdge) {
+			 papaEmeritus.position.x = rock.position.x; //+ rock.bounds.width;
+//			//} else {
+			//papaEmeritus.position.x = rock.position.x -
+			//papaEmeritus.bounds.width;
+//				//}
+//				//return;
+//				//}
+//				switch (papaEmeritus.jumpState) {
+//				 case GROUNDED:
+//				  break;
+//				 case FALLING:
+//				 case JUMP_FALLING:
+//				  papaEmeritus.position.y = rock.position.y +
+//				  papaEmeritus.bounds.height + papaEmeritus.origin.y;
+//				  papaEmeritus.jumpState = JUMP_STATE.GROUNDED;
+//				break;
+//				case JUMP_RISING:
+//				  papaEmeritus.position.y = rock.position.y +
+//				  papaEmeritus.bounds.height + papaEmeritus.origin.y +1;
+//				break;
+//			}
 	}
 	private void onCollisionPapaWithSoul(Soul soul) {
 		soul.collected = true;
@@ -152,20 +152,6 @@ public class WorldController implements InputProcessor {
 			}
 			}
 	
-	private Pixmap createProceduralPixmap(int width,int height){
-		Pixmap pixmap = new Pixmap(width, height, Format.RGBA8888);
-		//Fill square w/ red color at 50 %opacity
-		pixmap.setColor(1, 0, 0, 0.5f);
-		pixmap.fill();
-		// Draw a yellow-colored X shape on square
-		pixmap.setColor(1, 1, 0, 1);
-		pixmap.drawLine(0, 0, width, height);
-		pixmap.drawLine(width, 0, 0, height);
-		// Draw a cyan-colored border around square
-		pixmap.setColor(0, 1, 1, 1);
-		pixmap.drawRectangle(0, 0, width, height);
-		return pixmap;
-	}
 	
 	/**
 	 * Update method for WorldController
@@ -245,7 +231,7 @@ public class WorldController implements InputProcessor {
 			  level.papaEmeritus.terminalVelocity.x;
 			 }
 			}
-			// Bunny Jump
+			// Papa Jump
 			if (Gdx.input.isTouched() ||
 			Gdx.input.isKeyPressed(Keys.SPACE)) {
 			level.papaEmeritus.setJumping(true);

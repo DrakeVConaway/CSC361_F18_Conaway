@@ -29,7 +29,7 @@ public abstract class AbstractGameObject {
 	  */
 	 public AbstractGameObject() {
 		 position = new Vector2();
-		 dimension = new Vector2();
+		 dimension = new Vector2(1,1); //may need vals
 		 origin = new Vector2();
 		 scale = new Vector2(1,1);
 		 rotation = 0;
@@ -48,7 +48,7 @@ public abstract class AbstractGameObject {
 		 updateMotionY(deltaTime);
 		 //Move to new position
 		 position.x += velocity.x * deltaTime;
-		 position.y =+ velocity.y * deltaTime;	 
+		 position.y += velocity.y * deltaTime;	 
 	 }
 	 /**
 	  * manipulate the amount of friction on 
@@ -64,7 +64,7 @@ public abstract class AbstractGameObject {
 			 
 		 } else{
 			     velocity.x = 
-			    		 Math.min(velocity.x - friction.x *deltaTime, 0);
+			    		 Math.min(velocity.x + friction.x *deltaTime, 0);
 		  }
 		 }
 		 //Apply acceleration

@@ -57,6 +57,7 @@ public class Level {
   
   public Level(String filename) {
 	  init(filename);
+	  papaEmeritus.position.y = 1.0f;
   }
   
    private void init(String filename) {
@@ -93,7 +94,7 @@ public class Level {
 					   float heightIncreaseFactor = 0.25f;
 					   offsetHeight = -2.5f;
 					   obj.position.set(pixelX,baseHeight * obj.dimension.y
-							   *heightIncreaseFactor +offsetHeight);
+							   *heightIncreaseFactor +offsetHeight);//was + offf
 					   rocks.add((Rock) obj);
 				   }else {
 					   rocks.get(rocks.size - 1).increaseLength(1);
@@ -103,9 +104,9 @@ public class Level {
 			   //player spawn point
 			   else if(BLOCK_TYPE.PLAYER_SPAWNPOINT.sameColor(currentPixel)) {
 				   obj = new PapaEmeritus();
-				   offsetHeight = -3.0f;
-				   obj.position.set(pixelX,baseHeight * obj.dimension.y +
-						   offsetHeight);
+				   offsetHeight = 0.75f;
+				   obj.position.set(pixelX +1f ,baseHeight * obj.dimension.y +
+						   offsetHeight+1);
 				   papaEmeritus = (PapaEmeritus)obj;
 			   }
 			   //book of pain

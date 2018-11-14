@@ -26,7 +26,7 @@ public class Rock extends AbstractGameObject{
     	 dimension.set(1,1.5f);
     	 regEdge = Assets.instance.rock.edge;
     	 regMiddle = Assets.instance.rock.middle;
-    	 //Start lenght of this rock
+    	 //Start length of this rock
     	 setLength(1);
      }
      /**
@@ -61,11 +61,6 @@ public class Rock extends AbstractGameObject{
     			 origin.x,origin.y,dimension.x/4,dimension.y,
     			 scale.x,scale.y,rotation,reg.getRegionX(), reg.getRegionY(),
     			 reg.getRegionWidth(),reg.getRegionHeight(),false,false);
-    	 
-//    	 batch.draw(reg.getTexture(),position.x+relX,position.y +relY,
-//    			 origin.x,origin.y,reg.getRegionWidth(),reg.getRegionHeight(),
-//    			 scale.x,scale.y,rotation,reg.getRegionX(), reg.getRegionY(),
-//    			 reg.getRegionWidth(),reg.getRegionHeight(),false,false);
     	 
     	 //Draw middle
     	 relX=0;
