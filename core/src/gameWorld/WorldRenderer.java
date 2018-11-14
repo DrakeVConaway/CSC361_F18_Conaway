@@ -68,8 +68,24 @@ public class WorldRenderer implements Disposable{
 		renderGuiExtraLive(batch);
 		// draw FPS text (anchored to bottom right edge)
 		renderGuiFpsCounter(batch);
+		//render game over text
+		//renderGuiGameOverMessage(batch);
 		batch.end();
 		}
+	/**
+	 * Renders the Game Over message
+	 */
+//	private void renderGuiGameOverMessage (SpriteBatch batch) {
+//		float x = cameraGUI.viewportWidth / 2;
+//		float y = cameraGUI.viewportHeight / 2;
+//		if (worldController.isGameOver()) {
+//		BitmapFont fontGameOver = Assets.instance.fonts.defaultBig;
+//		fontGameOver.setColor(1, 0.75f, 0.25f, 1);
+//		fontGameOver.drawMultiLine(batch, "YOU FAILED TO BRING THE LIGHT TO THE PEOPLE, GAME OVER", x, y, 0,
+//		BitmapFont.HAlignment.CENTER);
+//		fontGameOver.setColor(1, 1, 1, 1);
+//		}
+//		}
     /**
      * Handle resizing
      * @param width
@@ -86,6 +102,7 @@ public class WorldRenderer implements Disposable{
 		cameraGUI.viewportHeight / 2, 0);
 		cameraGUI.update();
 	}
+
 	/**
 	 * Renders the score
 	 */
