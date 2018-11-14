@@ -10,7 +10,7 @@ import gameWorld.Assets;
  */
 public class Soul extends AbstractGameObject {
 	private TextureRegion soul;
-	private boolean collected;
+	public boolean collected;
 	/**
 	 * constructor for the soul
 	 */
