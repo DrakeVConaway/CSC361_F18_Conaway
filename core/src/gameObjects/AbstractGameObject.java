@@ -10,7 +10,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.MathUtils;
-
+import com.badlogic.gdx.physics.box2d.Body;
 public abstract class AbstractGameObject {
 
 	 public Vector2 position; 
@@ -23,6 +23,8 @@ public abstract class AbstractGameObject {
 	 public Vector2 friction; //slows down velocity, 0 means no friction
 	 public Vector2 acceleration; //constant accel in m/s sq
 	 public Rectangle bounds; //bounds for collision detection
+	  
+	 public Body body; //handles collison, velocity, movement, etc
 	 
 	 /**
 	  * Constructor for AGOs
@@ -44,11 +46,16 @@ public abstract class AbstractGameObject {
 	  * update method for AGOs
 	  */
 	 public void update(float deltaTime) {
+		 if(body == null){
 		 updateMotionX(deltaTime);
 		 updateMotionY(deltaTime);
 		 //Move to new position
 		 position.x += velocity.x * deltaTime;
 		 position.y += velocity.y * deltaTime;	 
+		 }else{
+			 position.set(body.getPosition());
+			 rotation=body.getAngle()*MathUtils.radiansToDegrees;
+		 }
 	 }
 	 /**
 	  * manipulate the amount of friction on 

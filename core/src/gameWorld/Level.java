@@ -12,6 +12,8 @@ import com.badlogic.gdx.utils.Array;
 import gameObjects.BookOfPain;
 import gameObjects.PapaEmeritus;
 import gameObjects.Soul;
+import gameObjects.Goal;
+import gameObjects.Knife;
 
 import gameObjects.
 AbstractGameObject;
@@ -31,6 +33,8 @@ public class Level {
   public PapaEmeritus papaEmeritus;
   public Array<Soul> souls;
   public Array<BookOfPain> books;
+  public Array<Knife> knives;
+  public Goal goal;
   
   
   public enum BLOCK_TYPE{
@@ -38,7 +42,8 @@ public class Level {
 	  ROCK(0,255,0), //green
 	  PLAYER_SPAWNPOINT(255,255,255), //white
 	  ITEM_BOOK(255,0,255), //purple
-	  ITEM_CURRENCY(255,255,0); //yellow
+	  ITEM_CURRENCY(255,255,0), //yellow
+	  GOAL(255,0,0); //red, the Baphomet
   
   private int color;
    private BLOCK_TYPE(int r, int g, int b) {
@@ -67,6 +72,8 @@ public class Level {
 	   rocks = new Array<Rock>();
 	   souls = new Array<Soul>();
 	   books = new Array<BookOfPain>();
+	   knives = new Array<Knife>();
+	  
 	   
 	   //load image file that represents level data
 	   Pixmap pixmap = new Pixmap(Gdx.files.internal(filename));
@@ -125,6 +132,13 @@ public class Level {
 				   + offsetHeight);
 				   souls.add((Soul)obj);
 			   }
+			   //goal
+			   else if(BLOCK_TYPE.GOAL.sameColor(currentPixel)){
+				   obj = new Goal();
+				   offsetHeight = -7.0f;
+				   obj.position.set(pixelX,baseHeight + offsetHeight);
+				   goal =(Goal)obj;
+			   }
 			   //unknown obj/pixel color
 			   else {
 				   int r = 0xff & (currentPixel >>> 24); //red color channel
@@ -152,6 +166,8 @@ public class Level {
    public void render(SpriteBatch batch) {
 	   //Draw mts
 	   mountains.render(batch);
+	   //Draw Goal
+	   goal.render(batch);
 	   //Draw Rocks
 	   for(Rock rock : rocks)
 		   rock.render(batch);
@@ -161,6 +177,9 @@ public class Level {
 	   //Draw Books
 	   for(BookOfPain book:books)
 		   book.render(batch);
+	   //Draw Knvies
+	   for(Knife knife : knives)
+		   knife.render(batch);
 	   //Draw Papa
 	   papaEmeritus.render(batch);
 	   
