@@ -109,6 +109,8 @@ public class Assets implements Disposable, AssetErrorListener {
 		public final AtlasRegion mountainLeft;
 		public final AtlasRegion mountainRight;
 		public final AtlasRegion waterOverlay;
+		public final AtlasRegion knife; //rain of knives
+		public final AtlasRegion goal; //did you collect the souls?
 		
 		public AssetLevelDecoration (TextureAtlas atlas) {
 		  cloud01 = atlas.findRegion("cloud01");
@@ -117,6 +119,8 @@ public class Assets implements Disposable, AssetErrorListener {
 		  mountainLeft = atlas.findRegion("mountain_left");	 
 		  mountainRight = atlas.findRegion("mountain_right");
 		  waterOverlay = atlas.findRegion("water_overlay");
+		  knife = atlas.findRegion("knife");
+		  goal = atlas.findRegion("goal"); //may be the baphomet, filler
 		 }
 		}
 	
