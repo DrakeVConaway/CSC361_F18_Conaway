@@ -13,19 +13,29 @@ import com.badlogic.gdx.InputProcessor;
 import utils.CameraHelper;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.Disposable;
+
 import gameObjects.Rock;
 import gameObjects.BookOfPain;
 import gameObjects.PapaEmeritus;
 import gameObjects.PapaEmeritus.JUMP_STATE;
 import gameObjects.Soul;
 import utils.Constants;
+import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.physics.box2d.Body;
+import com.badlogic.gdx.physics.box2d.BodyDef;
+import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
+import com.badlogic.gdx.physics.box2d.FixtureDef;
+import com.badlogic.gdx.physics.box2d.PolygonShape;
+import com.badlogic.gdx.physics.box2d.World;
+import gameObjects.Knife;
 /**
  * Keeps track of objects within the world, handles updates
  * Makes sure the renderer is able to draw objects
  * after they have updated
  * @author Drake Conaway
  */
-public class WorldController implements InputProcessor {
+public class WorldController extends InputAdapter implements Disposable {
 
 	private static final String TAG =
 			WorldController.class.getName();
@@ -33,6 +43,8 @@ public class WorldController implements InputProcessor {
 	public Level level;
 	public int lives;
 	public int score;
+	private boolean goalReached;
+	public World b2world;
 	
 	// Rectangles for collision detection
 	private Rectangle r1 = new Rectangle();
@@ -56,9 +68,12 @@ public class WorldController implements InputProcessor {
 	 */
 	private void initLevel(){
 		score = 0;
+		scoreVisual = score;
+		goalReached = false;
 		level = new Level(Constants.LEVEL_01); //set level to this, if more than
 											   //one level, will need tweaked
 		cameraHelper.setTarget(level.papaEmeritus);
+		initPhysics();
 	}
 	/**
 	 * Initialization method for 
@@ -71,7 +86,73 @@ public class WorldController implements InputProcessor {
 		timeLeftGameOverDelay = 0;
 		initLevel();
 	}
+	/**
+	 * Initials the physics engine
+	 */
+	 private void initPhysics(){
+		 if(b2world != null) b2world.dispose();
+		 b2world = new World(new Vector2(0,-9.01f),true);
+		 //Rocks
+		 Vector2 origin = new Vector2();
+		 for(Rock rock: level.rocks){
+			 BodyDef bodyDef = new BodyDef();
+			 bodyDef.type = BodyType.KinematicBody;
+			 bodyDef.position.set(rock.position);
+			 	Body body = b2world.createBody(bodyDef);
+			 rock.body = body;
+			 PolygonShape polygonShape = new PolygonShape();
+			 origin.x = rock.bounds.width / 2.0f;
+			 origin.y = rock.bounds.height / 2.0f;
+			 polygonShape.setAsBox(rock.bounds.width / 2.0f,
+			 rock.bounds.height / 2.0f, origin, 0);
+			 FixtureDef fixtureDef = new FixtureDef();
+			 fixtureDef.shape = polygonShape;
+			 body.createFixture(fixtureDef);
+			 polygonShape.dispose();
+		 }
+	 }
 	
+	 private void spawnKnives(Vector2 pos, int numKnives,
+			 float radius){
+		 float knifeShapeScale = 0.5f;
+		 //create knives w/ box2d
+		 for(int i = 0; i < numKnives; i++){
+			 Knife knife = new Knife();
+			 //calc random spawn position
+			 float x = MathUtils.random(-radius,radius);
+			 float y = MathUtils.random(5.0f, 15.0f);
+			 float rotation = MathUtils.random(0.0f, 360.0f)
+			 *  MathUtils.degreesToRadians;
+			 float knifeScale = MathUtils.random(0.5f, 1.5f);
+			 knife.scale.set(knifeScale, knifeScale);
+			  // create box2d body for knife with start position
+			  // and angle of rotation
+			 BodyDef bodyDef = new BodyDef();
+			 bodyDef.position.set(pos);
+			 bodyDef.position.add(x, y);
+			 bodyDef.angle = rotation;
+			 Body body = b2world.createBody(bodyDef);
+			 body.setType(BodyType.DynamicBody);
+			 knife.body = body;
+			 // create rectangular shape for carrot to allow
+			 // interactions (collisions) with other objects
+			 PolygonShape polygonShape = new PolygonShape();
+			 float halfWidth = knife.bounds.width / 2.0f * i;
+			 float halfHeight = knife.bounds.height /2.0f * i;
+			 polygonShape.setAsBox(halfWidth * knifeShapeScale,
+			 halfHeight * knifeShapeScale);
+			 // set physics attributes
+			 FixtureDef fixtureDef = new FixtureDef();
+			 fixtureDef.shape = polygonShape;
+			 fixtureDef.density = 50;
+			 fixtureDef.restitution = 0.5f;
+			 fixtureDef.friction = 0.5f;
+			 body.createFixture(fixtureDef);
+			 polygonShape.dispose();
+			 // finally, add new carrot to list for updating/rendering
+			 level.knives.add(knife);
+		 }
+	 }
 	private void onCollisionPapaWithRock(Rock rock) {
 		PapaEmeritus papaEmeritus = level.papaEmeritus;
 //		//float heightDifference = Math.abs(papaEmeritus.position.y
@@ -116,7 +197,19 @@ public class WorldController implements InputProcessor {
 		Gdx.app.log(TAG, "Book of Pain read");
 		}
 		
-	};
+	}
+	/**
+	 * collision w/ goal
+	 */
+	private void onCollisionPapaWithGoal(){
+		goalReached = true;
+		timeLeftGameOverDelay = Constants.TIME_DELAY_GAME_FINISHED);
+		 Vector2 centerPosPapa =
+				 new Vector2(level.papaEmeritus.position);
+		 centerPosPapa.x += level.papaEmeritus.bounds.width;
+		 spawnKnives(centerPosPapa, Constants.KNIVES_SPAWN_MAX,
+		 Constants.KNIVES_SPAWN_RADIUS);
+	}
 	/**
 	 * Test collisions
 	 */
@@ -150,7 +243,14 @@ public class WorldController implements InputProcessor {
 			onCollisionPapaWithBook(book);
 			break;
 			}
-			}
+		// Test collision: Bunny Head <-> Goal
+		if (!goalReached) {
+		r2.set(level.goal.bounds);
+		r2.x += level.goal.position.x;
+		r2.y += level.goal.position.y;
+		if (r1.overlaps(r2)) onCollisionPapaWithGoal();
+		}
+		}
 	
 	
 	/**
@@ -162,13 +262,14 @@ public class WorldController implements InputProcessor {
 	public void update(float deltaTime) {
 		handleDebugInput(deltaTime);
 		if (isGameOver()) {
-			timeLeftGameOverDelay -= deltaTime;
+			timeLeftGameOverDelay -= deltaTime; //menu code needed
 			if (timeLeftGameOverDelay < 0) init();
 		} else {
 		handleInputGame(deltaTime);
 		}
 		level.update(deltaTime);
 		testCollisions();
+		b2world.step(deltaTime, 8, 3);
 		cameraHelper.update(deltaTime);
 		if(!isGameOver() && isPlayerInWater()){
 			lives--;
@@ -312,5 +413,9 @@ public class WorldController implements InputProcessor {
 	public boolean scrolled(int amount) {
 		// TODO Auto-generated method stub
 		return false;
+	}
+	@Override
+	public void dispose() {
+		if(b2world != null) b2world.dispose();
 	}
 }
