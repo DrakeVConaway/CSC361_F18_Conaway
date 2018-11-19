@@ -1,5 +1,6 @@
 package gameWorld;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 /**
  * Handles rendering of world's objects
  * as well as the GUI
@@ -17,6 +18,8 @@ public class WorldRenderer implements Disposable{
 	private OrthographicCamera cameraGUI;
 	private SpriteBatch batch;
 	private WorldController worldController;
+	private static final boolean DEBUG_DRAW_BOX2D_WORLD = false;
+	private Box2DDebugRenderer b2debugRenderer;
 	
 	public WorldRenderer(WorldController worldController) {
 		this.worldController = worldController;
@@ -34,6 +37,7 @@ public class WorldRenderer implements Disposable{
 		cameraGUI.position.set(0, 0, 0);
 		cameraGUI.setToOrtho(true); // flip y-axis
 		cameraGUI.update();
+		b2debugRenderer = new Box2DDebugRenderer();
 	}
 	/**
 	 * Generic Render method
@@ -53,6 +57,10 @@ public class WorldRenderer implements Disposable{
 		batch.begin();
 		worldController.level.render(batch);
 		batch.end();
+		if(DEBUG_DRAW_BOX2D_WORLD) {
+			b2debugRenderer.render(worldController.b2world, 
+					camera.combined);
+		}
 		}
 	/**
 	 * Render the gui by passing
