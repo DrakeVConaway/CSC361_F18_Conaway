@@ -34,7 +34,7 @@ public class Level {
   public Array<Soul> souls;
   public Array<BookOfPain> books;
   public Array<Knife> knives;
-  public Goal goal;
+ // public Goal goal;
   
   
   public enum BLOCK_TYPE{
@@ -133,12 +133,12 @@ public class Level {
 				   souls.add((Soul)obj);
 			   }
 			   //goal
-			   else if(BLOCK_TYPE.GOAL.sameColor(currentPixel)){
-				   obj = new Goal();
-				   offsetHeight = -7.0f;
-				   obj.position.set(pixelX,baseHeight + offsetHeight);
-				   goal =(Goal)obj;
-			   }
+//			   else if(BLOCK_TYPE.GOAL.sameColor(currentPixel)){
+//				   obj = new Goal();
+//				   offsetHeight = -7.0f;
+//				   obj.position.set(pixelX,baseHeight + offsetHeight);
+//				   goal =(Goal)obj;
+		   //}
 			   //unknown obj/pixel color
 			   else {
 				   int r = 0xff & (currentPixel >>> 24); //red color channel
@@ -167,7 +167,7 @@ public class Level {
 	   //Draw mts
 	   mountains.render(batch);
 	   //Draw Goal
-	   goal.render(batch);
+	   //goal.render(batch);
 	   //Draw Rocks
 	   for(Rock rock : rocks)
 		   rock.render(batch);

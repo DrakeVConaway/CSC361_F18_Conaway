@@ -68,7 +68,7 @@ public class WorldController extends InputAdapter implements Disposable {
 	 */
 	private void initLevel(){
 		score = 0;
-		scoreVisual = score;
+		//scoreVisual = score;
 		goalReached = false;
 		level = new Level(Constants.LEVEL_01); //set level to this, if more than
 											   //one level, will need tweaked
@@ -201,15 +201,15 @@ public class WorldController extends InputAdapter implements Disposable {
 	/**
 	 * collision w/ goal
 	 */
-	private void onCollisionPapaWithGoal(){
-		goalReached = true;
-		timeLeftGameOverDelay = Constants.TIME_DELAY_GAME_FINISHED);
-		 Vector2 centerPosPapa =
-				 new Vector2(level.papaEmeritus.position);
-		 centerPosPapa.x += level.papaEmeritus.bounds.width;
-		 spawnKnives(centerPosPapa, Constants.KNIVES_SPAWN_MAX,
-		 Constants.KNIVES_SPAWN_RADIUS);
-	}
+//	private void onCollisionPapaWithGoal(){
+//		goalReached = true;
+//		timeLeftGameOverDelay = Constants.TIME_DELAY_GAME_FINISHED);
+//		 Vector2 centerPosPapa =
+//				 new Vector2(level.papaEmeritus.position);
+//		 centerPosPapa.x += level.papaEmeritus.bounds.width;
+//		 spawnKnives(centerPosPapa, Constants.KNIVES_SPAWN_MAX,
+//		 Constants.KNIVES_SPAWN_RADIUS);
+	//}
 	/**
 	 * Test collisions
 	 */
@@ -244,12 +244,12 @@ public class WorldController extends InputAdapter implements Disposable {
 			break;
 			}
 		// Test collision: Bunny Head <-> Goal
-		if (!goalReached) {
-		r2.set(level.goal.bounds);
-		r2.x += level.goal.position.x;
-		r2.y += level.goal.position.y;
-		if (r1.overlaps(r2)) onCollisionPapaWithGoal();
-		}
+//		if (!goalReached) {
+//		r2.set(level.goal.bounds);
+//		r2.x += level.goal.position.x;
+//		r2.y += level.goal.position.y;
+//		//if (r1.overlaps(r2)) onCollisionPapaWithGoal();
+//		}
 		}
 	
 	
