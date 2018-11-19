@@ -76,6 +76,33 @@ public class PapaEmeritus extends AbstractGameObject{
 //				}
 				}
 	}
+	@Override
+	public void updateMotionY(float deltaTime) {
+		switch(jumpState) {
+		case GROUNDED:
+			jumpState = JUMP_STATE.FALLING;
+			if(velocity.x !=0) {	
+			}
+		case JUMP_RISING:
+			timeJumping += deltaTime;
+			if(timeJumping <= JUMP_TIME_MAX) {
+				velocity.y = terminalVelocity.y;
+			}
+			break;
+		case FALLING:
+		    break;
+		case JUMP_FALLING:
+			//add delta to track jump time
+			timeJumping += deltaTime;
+			//jump to min height
+			if(timeJumping > 0 && timeJumping <= JUMP_TIME_MIN) {
+				velocity.y = terminalVelocity.y;
+			}
+		}
+		if(jumpState != JUMP_STATE.GROUNDED) {
+			super.updateMotionY(deltaTime);
+		}
+	}
 	/**
 	 * What to do when the book 
 	 * is picked up

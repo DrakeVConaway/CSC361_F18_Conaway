@@ -91,7 +91,7 @@ public class WorldController extends InputAdapter implements Disposable {
 	 */
 	 private void initPhysics(){
 		 if(b2world != null) b2world.dispose();
-		 b2world = new World(new Vector2(0,-9.01f),true);
+		 b2world = new World(new Vector2(0,-9.81f),true);
 		 //Rocks
 		 Vector2 origin = new Vector2();
 		 for(Rock rock: level.rocks){
@@ -103,8 +103,10 @@ public class WorldController extends InputAdapter implements Disposable {
 			 PolygonShape polygonShape = new PolygonShape();
 			 origin.x = rock.bounds.width / 2.0f;
 			 origin.y = rock.bounds.height / 2.0f;
+			 
 			 polygonShape.setAsBox(rock.bounds.width / 2.0f,
 			 rock.bounds.height / 2.0f, origin, 0);
+			 
 			 FixtureDef fixtureDef = new FixtureDef();
 			 fixtureDef.shape = polygonShape;
 			 body.createFixture(fixtureDef);
@@ -155,33 +157,48 @@ public class WorldController extends InputAdapter implements Disposable {
 	 }
 	private void onCollisionPapaWithRock(Rock rock) {
 		PapaEmeritus papaEmeritus = level.papaEmeritus;
-//		//float heightDifference = Math.abs(papaEmeritus.position.y
-//			//	- ( rock.position.y + rock.bounds.height));
-//			//if (heightDifference > 0.25f) { 
-//			//	boolean hitLeftEdge = papaEmeritus.position.x > (
-//			//rock.position.x + rock.bounds.width / 2.0f);
-//			//if (hitLeftEdge) {
-			 papaEmeritus.position.x = rock.position.x; //+ rock.bounds.width;
-//			//} else {
-			//papaEmeritus.position.x = rock.position.x -
-			//papaEmeritus.bounds.width;
-//				//}
-//				//return;
-//				//}
-//				switch (papaEmeritus.jumpState) {
-//				 case GROUNDED:
-//				  break;
-//				 case FALLING:
-//				 case JUMP_FALLING:
-//				  papaEmeritus.position.y = rock.position.y +
-//				  papaEmeritus.bounds.height + papaEmeritus.origin.y;
-//				  papaEmeritus.jumpState = JUMP_STATE.GROUNDED;
-//				break;
-//				case JUMP_RISING:
-//				  papaEmeritus.position.y = rock.position.y +
-//				  papaEmeritus.bounds.height + papaEmeritus.origin.y +1;
-//				break;
-//			}
+float heightDifference = Math.abs(papaEmeritus.position.y
+- ( rock.position.y + rock.bounds.height));
+   boolean hitLeftEdge = false;
+if (heightDifference > .25f) {//was .25 
+	 hitLeftEdge = papaEmeritus.position.x > 
+rock.position.x + rock.bounds.width / 2.0f;
+			if(hitLeftEdge) {
+			 papaEmeritus.position.x = rock.position.x + rock.bounds.width;
+		} else {
+			
+			papaEmeritus.position.x = rock.position.x -
+			papaEmeritus.bounds.width;
+			}
+				return;
+			}
+			switch (papaEmeritus.jumpState) {
+				 case GROUNDED:
+					// papaEmeritus.terminalVelocity.setZero();	
+					// papaEmeritus.position.x = rock.position.x;
+					 //papaEmeritus.terminalVelocity.set(3.0f, 4.0f);
+					 break;
+				 case FALLING:
+//					 if(hitLeftEdge) {
+//						 papaEmeritus.position.x = rock.position.x + rock.bounds.width;
+//						} else {
+//							
+//							papaEmeritus.jumpState = JUMP_STATE.GROUNDED;
+//							}
+					 
+								
+					 
+				 case JUMP_FALLING:
+					 System.out.print("JUMP_FALL");
+			  papaEmeritus.position.y = rock.position.y +
+				  papaEmeritus.bounds.height + papaEmeritus.origin.y;
+				  papaEmeritus.jumpState = JUMP_STATE.GROUNDED;
+			break;
+				case JUMP_RISING:
+				  papaEmeritus.position.y = rock.position.y +
+				  papaEmeritus.bounds.height + papaEmeritus.origin.y +1;
+				break;
+			}
 	}
 	private void onCollisionPapaWithSoul(Soul soul) {
 		soul.collected = true;
@@ -221,6 +238,8 @@ public class WorldController extends InputAdapter implements Disposable {
 		r2.set(rock.position.x, rock.position.y, rock.bounds.width,
 		rock.bounds.height);
 		if (!r1.overlaps(r2)) continue;
+		
+		
 		onCollisionPapaWithRock(rock);
 		// IMPORTANT: must do all collisions for valid
 		// edge testing on rocks.
@@ -268,6 +287,7 @@ public class WorldController extends InputAdapter implements Disposable {
 		handleInputGame(deltaTime);
 		}
 		level.update(deltaTime);
+		level.papaEmeritus.updateMotionY(deltaTime);
 		testCollisions();
 		b2world.step(deltaTime, 8, 3);
 		cameraHelper.update(deltaTime);

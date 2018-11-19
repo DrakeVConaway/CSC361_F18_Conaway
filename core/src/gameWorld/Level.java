@@ -111,7 +111,7 @@ public class Level {
 			   //player spawn point
 			   else if(BLOCK_TYPE.PLAYER_SPAWNPOINT.sameColor(currentPixel)) {
 				   obj = new PapaEmeritus();
-				   offsetHeight = 0.75f;
+				   offsetHeight = 2.0f;
 				   obj.position.set(pixelX +1f ,baseHeight * obj.dimension.y +
 						   offsetHeight+1);
 				   papaEmeritus = (PapaEmeritus)obj;
