@@ -45,7 +45,7 @@ public class WorldController extends InputAdapter implements Disposable {
 	public int score;
 	private boolean goalReached;
 	public World b2world;
-	
+	private Vector2 movement = new Vector2();
 	// Rectangles for collision detection
 	private Rectangle r1 = new Rectangle();
 	private Rectangle r2 = new Rectangle();
@@ -155,6 +155,12 @@ public class WorldController extends InputAdapter implements Disposable {
 			 level.knives.add(knife);
 		 }
 	 }
+	 /**
+	  * How does Papa interact with
+	  * the rocks,
+	  * state switching here
+	  * @param rock
+	  */
 	private void onCollisionPapaWithRock(Rock rock) {
 		PapaEmeritus papaEmeritus = level.papaEmeritus;
 float heightDifference = Math.abs(papaEmeritus.position.y
@@ -172,22 +178,22 @@ rock.position.x + rock.bounds.width / 2.0f;
 			}
 				return;
 			}
+       
 			switch (papaEmeritus.jumpState) {
 				 case GROUNDED:
 					// papaEmeritus.terminalVelocity.setZero();	
-					// papaEmeritus.position.x = rock.position.x;
-					 //papaEmeritus.terminalVelocity.set(3.0f, 4.0f);
+					 papaEmeritus.position.x = rock.position.x;
+					 papaEmeritus.terminalVelocity.set(3.0f, 4.0f);
 					 break;
 				 case FALLING:
-//					 if(hitLeftEdge) {
-//						 papaEmeritus.position.x = rock.position.x + rock.bounds.width;
-//						} else {
+					 if(hitLeftEdge) {
+						 papaEmeritus.position.x = rock.position.x + rock.bounds.width;
+						} else {
 //							
-//							papaEmeritus.jumpState = JUMP_STATE.GROUNDED;
-//							}
+							papaEmeritus.jumpState = JUMP_STATE.GROUNDED;
+							}
 					 
-								
-					 
+				//Jump Fall state	 
 				 case JUMP_FALLING:
 					 System.out.print("JUMP_FALL");
 			  papaEmeritus.position.y = rock.position.y +
@@ -340,11 +346,13 @@ rock.position.x + rock.bounds.width / 2.0f;
 		if (cameraHelper.hasTarget(level.papaEmeritus)) {
 			// Player Movement
 			if (Gdx.input.isKeyPressed(Keys.LEFT)) {
-			level.papaEmeritus.velocity.x =
-			-level.papaEmeritus.terminalVelocity.x;
+				level.papaEmeritus.body.setLinearVelocity(-1.0f,0f);
+			//level.papaEmeritus.velocity.x =
+			//-level.papaEmeritus.terminalVelocity.x;
 			} else if (Gdx.input.isKeyPressed(Keys.RIGHT)) {
-			  level.papaEmeritus.velocity.x =
-			  level.papaEmeritus.terminalVelocity.x;
+				level.papaEmeritus.body.setLinearVelocity(1.0f,0f);
+				//level.papaEmeritus.velocity.x =
+			  //level.papaEmeritus.terminalVelocity.x;
 			} else {
 			 // Execute auto-forward movement on non-desktop platform
 			if (Gdx.app.getType() != ApplicationType.Desktop) {

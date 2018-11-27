@@ -96,7 +96,7 @@ public class PapaEmeritus extends AbstractGameObject{
 			timeJumping += deltaTime;
 			//jump to min height
 			if(timeJumping > 0 && timeJumping <= JUMP_TIME_MIN) {
-				velocity.y = terminalVelocity.y;
+				velocity.y = -terminalVelocity.y;
 			}
 		}
 		if(jumpState != JUMP_STATE.GROUNDED) {

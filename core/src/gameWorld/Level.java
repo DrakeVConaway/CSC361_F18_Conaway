@@ -106,10 +106,11 @@ public class Level {
 				   }else {
 					   rocks.get(rocks.size - 1).increaseLength(1);
 				   }
-				   System.out.println("add rock");
+				   //System.out.println("add rock");
 			   }
 			   //player spawn point
 			   else if(BLOCK_TYPE.PLAYER_SPAWNPOINT.sameColor(currentPixel)) {
+				   System.out.println(currentPixel);
 				   obj = new PapaEmeritus();
 				   offsetHeight = 2.0f;
 				   obj.position.set(pixelX +1f ,baseHeight * obj.dimension.y +

@@ -11,6 +11,9 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.physics.box2d.Body;
+import com.badlogic.gdx.physics.box2d.BodyDef;
+import com.badlogic.gdx.physics.box2d.FixtureDef;
+import com.badlogic.gdx.physics.box2d.PolygonShape;
 public abstract class AbstractGameObject {
 
 	 public Vector2 position; 
@@ -25,7 +28,9 @@ public abstract class AbstractGameObject {
 	 public Rectangle bounds; //bounds for collision detection
 	  
 	 public Body body; //handles collison, velocity, movement, etc
-	 
+	 public FixtureDef fixtureDef;
+	 public PolygonShape polygonShape;
+	 public BodyDef bodyDef;
 	 /**
 	  * Constructor for AGOs
 	  */
