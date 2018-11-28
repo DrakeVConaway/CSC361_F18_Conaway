@@ -5,6 +5,8 @@ package gameObjects;
  *
  */
 import com.badlogic.gdx.Gdx;
+import utils.CharacterSkin;
+import utils.GamePreferences;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import gameWorld.Assets;
@@ -124,6 +126,10 @@ public class PapaEmeritus extends AbstractGameObject{
 	@Override
 	public void render(SpriteBatch batch){
 		TextureRegion reg = null;
+		//apply skin color
+		batch.setColor(
+				CharacterSkin.values()[GamePreferences.instance.charSkin]
+				.getColor());
 		//set special color when papa has book
 		if(hasBookPowerup){
 			batch.setColor(1.0f,0.8f,0.0f,1.0f);
