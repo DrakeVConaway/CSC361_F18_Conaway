@@ -17,6 +17,8 @@ public class DesktopLauncher {
 			settings.debug = drawDebugOutline;
 			TexturePacker.process(settings,  "assets-raw/images", "../core/assets/images",
 					"Hellferno.atlas");
+			TexturePacker.process(settings, "assets-raw/images-ui","../core/assets/images", 
+					"hellferno-ui.pack");
 		}
 		LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
 		config.title = "Hellferno";

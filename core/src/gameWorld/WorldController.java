@@ -1,5 +1,6 @@
 package gameWorld;
 import com.badlogic.gdx.graphics.Pixmap;
+
 import com.badlogic.gdx.graphics.Pixmap.Format;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
@@ -7,6 +8,7 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Application.ApplicationType;
+import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.InputProcessor;
@@ -14,7 +16,7 @@ import utils.CameraHelper;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Disposable;
-
+import Screens.MenuScreen;
 import gameObjects.Rock;
 import gameObjects.BookOfPain;
 import gameObjects.PapaEmeritus;
@@ -50,6 +52,7 @@ public class WorldController extends InputAdapter implements Disposable {
 	private Rectangle r1 = new Rectangle();
 	private Rectangle r2 = new Rectangle();
 	private float timeLeftGameOverDelay;
+	private Game game;
 	
 	public boolean isGameOver(){
 		return lives < 0;
@@ -57,10 +60,16 @@ public class WorldController extends InputAdapter implements Disposable {
 	public boolean isPlayerInWater(){
 		return level.papaEmeritus.position.y < -5;
 	}
+	
+	private void backToMenu() {
+		//swith to menuscreen
+		game.setScreen(new MenuScreen(game));
+	}
 	/**
 	 * World Controller constructor
 	 */
-	public WorldController() {
+	public WorldController(Game game) {
+		this.game = game;
 		init();
 	}
 	/**
@@ -288,7 +297,7 @@ rock.position.x + rock.bounds.width / 2.0f;
 		handleDebugInput(deltaTime);
 		if (isGameOver()) {
 			timeLeftGameOverDelay -= deltaTime; //menu code needed
-			if (timeLeftGameOverDelay < 0) init();
+			if (timeLeftGameOverDelay < 0) backToMenu(); //return to menu when over
 		} else {
 		handleInputGame(deltaTime);
 		}
@@ -403,6 +412,10 @@ rock.position.x + rock.bounds.width / 2.0f;
 		? null: level.papaEmeritus);
 		Gdx.app.debug(TAG, "Camera follow enabled: "
 		+ cameraHelper.hasTarget());
+		}
+		//back to menu
+		else if(keycode == Keys.ESCAPE || keycode == Keys.BACK) {
+			backToMenu();
 		}
 		return false;
 	}
