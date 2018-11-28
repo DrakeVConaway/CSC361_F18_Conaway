@@ -9,6 +9,11 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.Array;
+import gameObjects.BookOfPain;
+import gameObjects.PapaEmeritus;
+import gameObjects.Soul;
+import gameObjects.Goal;
+import gameObjects.Knife;
 
 import gameObjects.
 AbstractGameObject;
@@ -20,12 +25,25 @@ import gameObjects.WaterOverlay;
 public class Level {
   public static final String TAG = Level.class.getName();
   
+  //objects
+  public Array<Rock>rocks;
+  //decoration
+  public Mountains mountains;
+  public WaterOverlay waterOverlay;
+  public PapaEmeritus papaEmeritus;
+  public Array<Soul> souls;
+  public Array<BookOfPain> books;
+  public Array<Knife> knives;
+ // public Goal goal;
+  
+  
   public enum BLOCK_TYPE{
 	  EMPTY(0,0,0), //black
 	  ROCK(0,255,0), //green
 	  PLAYER_SPAWNPOINT(255,255,255), //white
 	  ITEM_BOOK(255,0,255), //purple
-	  ITEM_CURRENCY(255,255,0); //yellow
+	  ITEM_CURRENCY(255,255,0), //yellow
+	  GOAL(255,0,0); //red, the Baphomet
   
   private int color;
    private BLOCK_TYPE(int r, int g, int b) {
@@ -41,19 +59,21 @@ public class Level {
    }
   }
   
-  //objects
-  public Array<Rock>rocks;
-  //decoration
-  public Mountains mountains;
-  public WaterOverlay waterOverlay;
   
   public Level(String filename) {
 	  init(filename);
+	  papaEmeritus.position.y = 1.0f;
   }
   
    private void init(String filename) {
+	   //player character
+	   papaEmeritus = null;
 	   //objects
 	   rocks = new Array<Rock>();
+	   souls = new Array<Soul>();
+	   books = new Array<BookOfPain>();
+	   knives = new Array<Knife>();
+	  
 	   
 	   //load image file that represents level data
 	   Pixmap pixmap = new Pixmap(Gdx.files.internal(filename));
@@ -81,23 +101,45 @@ public class Level {
 					   float heightIncreaseFactor = 0.25f;
 					   offsetHeight = -2.5f;
 					   obj.position.set(pixelX,baseHeight * obj.dimension.y
-							   *heightIncreaseFactor +offsetHeight);
+							   *heightIncreaseFactor +offsetHeight);//was + offf
 					   rocks.add((Rock) obj);
 				   }else {
 					   rocks.get(rocks.size - 1).increaseLength(1);
 				   }
-				   System.out.println("add rock");
+				   //System.out.println("add rock");
 			   }
 			   //player spawn point
 			   else if(BLOCK_TYPE.PLAYER_SPAWNPOINT.sameColor(currentPixel)) {
+				   System.out.println(currentPixel);
+				   obj = new PapaEmeritus();
+				   offsetHeight = 2.0f;
+				   obj.position.set(pixelX +1f ,baseHeight * obj.dimension.y +
+						   offsetHeight+1);
+				   papaEmeritus = (PapaEmeritus)obj;
 			   }
 			   //book of pain
 			   else if (BLOCK_TYPE.ITEM_BOOK.sameColor(currentPixel)) {
+				   obj = new BookOfPain();
+				   offsetHeight = -1.5f;
+				   obj.position.set(pixelX,baseHeight * obj.dimension.y
+				   + offsetHeight);
+				   books.add((BookOfPain)obj);
 			   }
 			   //souls
 			   else if(BLOCK_TYPE.ITEM_CURRENCY.sameColor(currentPixel)) {
-				   
+				   obj = new Soul();
+				   offsetHeight = -1.5f;
+				   obj.position.set(pixelX,baseHeight * obj.dimension.y
+				   + offsetHeight);
+				   souls.add((Soul)obj);
 			   }
+			   //goal
+//			   else if(BLOCK_TYPE.GOAL.sameColor(currentPixel)){
+//				   obj = new Goal();
+//				   offsetHeight = -7.0f;
+//				   obj.position.set(pixelX,baseHeight + offsetHeight);
+//				   goal =(Goal)obj;
+		   //}
 			   //unknown obj/pixel color
 			   else {
 				   int r = 0xff & (currentPixel >>> 24); //red color channel
@@ -125,10 +167,33 @@ public class Level {
    public void render(SpriteBatch batch) {
 	   //Draw mts
 	   mountains.render(batch);
+	   //Draw Goal
+	   //goal.render(batch);
 	   //Draw Rocks
 	   for(Rock rock : rocks)
 		   rock.render(batch);
+	   //Draw Souls
+	   for(Soul soul :souls)
+		   soul.render(batch);
+	   //Draw Books
+	   for(BookOfPain book:books)
+		   book.render(batch);
+	   //Draw Knvies
+	   for(Knife knife : knives)
+		   knife.render(batch);
+	   //Draw Papa
+	   papaEmeritus.render(batch);
+	   
 	   //Draw water overlay
-	  //waterOverlay.render(batch);
+	  waterOverlay.render(batch);
    }
+   public void update (float deltaTime) {
+	   papaEmeritus.update(deltaTime);
+	   for(Rock rock : rocks)
+	   rock.update(deltaTime);
+	   for(Soul soul : souls)
+	   soul.update(deltaTime);
+	   for(BookOfPain book : books)
+		   book.update(deltaTime);
+}
 }

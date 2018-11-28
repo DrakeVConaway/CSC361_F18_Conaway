@@ -4,6 +4,7 @@ import com.badlogic.gdx.graphics.Pixmap.Format;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Application.ApplicationType;
 import com.badlogic.gdx.Input.Keys;
@@ -12,15 +13,29 @@ import com.badlogic.gdx.InputProcessor;
 import utils.CameraHelper;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.Disposable;
+
 import gameObjects.Rock;
+import gameObjects.BookOfPain;
+import gameObjects.PapaEmeritus;
+import gameObjects.PapaEmeritus.JUMP_STATE;
+import gameObjects.Soul;
 import utils.Constants;
+import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.physics.box2d.Body;
+import com.badlogic.gdx.physics.box2d.BodyDef;
+import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
+import com.badlogic.gdx.physics.box2d.FixtureDef;
+import com.badlogic.gdx.physics.box2d.PolygonShape;
+import com.badlogic.gdx.physics.box2d.World;
+import gameObjects.Knife;
 /**
  * Keeps track of objects within the world, handles updates
  * Makes sure the renderer is able to draw objects
  * after they have updated
  * @author Drake Conaway
  */
-public class WorldController implements InputProcessor {
+public class WorldController extends InputAdapter implements Disposable {
 
 	private static final String TAG =
 			WorldController.class.getName();
@@ -28,7 +43,20 @@ public class WorldController implements InputProcessor {
 	public Level level;
 	public int lives;
 	public int score;
+	private boolean goalReached;
+	public World b2world;
+	private Vector2 movement = new Vector2();
+	// Rectangles for collision detection
+	private Rectangle r1 = new Rectangle();
+	private Rectangle r2 = new Rectangle();
+	private float timeLeftGameOverDelay;
 	
+	public boolean isGameOver(){
+		return lives < 0;
+	}
+	public boolean isPlayerInWater(){
+		return level.papaEmeritus.position.y < -5;
+	}
 	/**
 	 * World Controller constructor
 	 */
@@ -40,8 +68,12 @@ public class WorldController implements InputProcessor {
 	 */
 	private void initLevel(){
 		score = 0;
+		//scoreVisual = score;
+		goalReached = false;
 		level = new Level(Constants.LEVEL_01); //set level to this, if more than
 											   //one level, will need tweaked
+		cameraHelper.setTarget(level.papaEmeritus);
+		initPhysics();
 	}
 	/**
 	 * Initialization method for 
@@ -51,25 +83,200 @@ public class WorldController implements InputProcessor {
 		Gdx.input.setInputProcessor(this);
 		cameraHelper = new CameraHelper();
 		lives = Constants.LIVES_START;
+		timeLeftGameOverDelay = 0;
 		initLevel();
 	}
+	/**
+	 * Initials the physics engine
+	 */
+	 private void initPhysics(){
+		 if(b2world != null) b2world.dispose();
+		 b2world = new World(new Vector2(0,-9.81f),true);
+		 //Rocks
+		 Vector2 origin = new Vector2();
+		 for(Rock rock: level.rocks){
+			 BodyDef bodyDef = new BodyDef();
+			 bodyDef.type = BodyType.KinematicBody;
+			 bodyDef.position.set(rock.position);
+			 	Body body = b2world.createBody(bodyDef);
+			 rock.body = body;
+			 PolygonShape polygonShape = new PolygonShape();
+			 origin.x = rock.bounds.width / 2.0f;
+			 origin.y = rock.bounds.height / 2.0f;
+			 
+			 polygonShape.setAsBox(rock.bounds.width / 2.0f,
+			 rock.bounds.height / 2.0f, origin, 0);
+			 
+			 FixtureDef fixtureDef = new FixtureDef();
+			 fixtureDef.shape = polygonShape;
+			 body.createFixture(fixtureDef);
+			 polygonShape.dispose();
+		 }
+	 }
 	
-	
-	
-	private Pixmap createProceduralPixmap(int width,int height){
-		Pixmap pixmap = new Pixmap(width, height, Format.RGBA8888);
-		//Fill square w/ red color at 50 %opacity
-		pixmap.setColor(1, 0, 0, 0.5f);
-		pixmap.fill();
-		// Draw a yellow-colored X shape on square
-		pixmap.setColor(1, 1, 0, 1);
-		pixmap.drawLine(0, 0, width, height);
-		pixmap.drawLine(width, 0, 0, height);
-		// Draw a cyan-colored border around square
-		pixmap.setColor(0, 1, 1, 1);
-		pixmap.drawRectangle(0, 0, width, height);
-		return pixmap;
+	 private void spawnKnives(Vector2 pos, int numKnives,
+			 float radius){
+		 float knifeShapeScale = 0.5f;
+		 //create knives w/ box2d
+		 for(int i = 0; i < numKnives; i++){
+			 Knife knife = new Knife();
+			 //calc random spawn position
+			 float x = MathUtils.random(-radius,radius);
+			 float y = MathUtils.random(5.0f, 15.0f);
+			 float rotation = MathUtils.random(0.0f, 360.0f)
+			 *  MathUtils.degreesToRadians;
+			 float knifeScale = MathUtils.random(0.5f, 1.5f);
+			 knife.scale.set(knifeScale, knifeScale);
+			  // create box2d body for knife with start position
+			  // and angle of rotation
+			 BodyDef bodyDef = new BodyDef();
+			 bodyDef.position.set(pos);
+			 bodyDef.position.add(x, y);
+			 bodyDef.angle = rotation;
+			 Body body = b2world.createBody(bodyDef);
+			 body.setType(BodyType.DynamicBody);
+			 knife.body = body;
+			 // create rectangular shape for carrot to allow
+			 // interactions (collisions) with other objects
+			 PolygonShape polygonShape = new PolygonShape();
+			 float halfWidth = knife.bounds.width / 2.0f * i;
+			 float halfHeight = knife.bounds.height /2.0f * i;
+			 polygonShape.setAsBox(halfWidth * knifeShapeScale,
+			 halfHeight * knifeShapeScale);
+			 // set physics attributes
+			 FixtureDef fixtureDef = new FixtureDef();
+			 fixtureDef.shape = polygonShape;
+			 fixtureDef.density = 50;
+			 fixtureDef.restitution = 0.5f;
+			 fixtureDef.friction = 0.5f;
+			 body.createFixture(fixtureDef);
+			 polygonShape.dispose();
+			 // finally, add new carrot to list for updating/rendering
+			 level.knives.add(knife);
+		 }
+	 }
+	 /**
+	  * How does Papa interact with
+	  * the rocks,
+	  * state switching here
+	  * @param rock
+	  */
+	private void onCollisionPapaWithRock(Rock rock) {
+		PapaEmeritus papaEmeritus = level.papaEmeritus;
+float heightDifference = Math.abs(papaEmeritus.position.y
+- ( rock.position.y + rock.bounds.height));
+   boolean hitLeftEdge = false;
+if (heightDifference > .25f) {//was .25 
+	 hitLeftEdge = papaEmeritus.position.x > 
+rock.position.x + rock.bounds.width / 2.0f;
+			if(hitLeftEdge) {
+			 papaEmeritus.position.x = rock.position.x + rock.bounds.width;
+		} else {
+			
+			papaEmeritus.position.x = rock.position.x -
+			papaEmeritus.bounds.width;
+			}
+				return;
+			}
+       
+			switch (papaEmeritus.jumpState) {
+				 case GROUNDED:
+					// papaEmeritus.terminalVelocity.setZero();	
+					 papaEmeritus.position.x = rock.position.x;
+					 papaEmeritus.terminalVelocity.set(3.0f, 4.0f);
+					 break;
+				 case FALLING:
+					 if(hitLeftEdge) {
+						 papaEmeritus.position.x = rock.position.x + rock.bounds.width;
+						} else {
+//							
+							papaEmeritus.jumpState = JUMP_STATE.GROUNDED;
+							}
+					 
+				//Jump Fall state	 
+				 case JUMP_FALLING:
+					 System.out.print("JUMP_FALL");
+			  papaEmeritus.position.y = rock.position.y +
+				  papaEmeritus.bounds.height + papaEmeritus.origin.y;
+				  papaEmeritus.jumpState = JUMP_STATE.GROUNDED;
+			break;
+				case JUMP_RISING:
+				  papaEmeritus.position.y = rock.position.y +
+				  papaEmeritus.bounds.height + papaEmeritus.origin.y +1;
+				break;
+			}
 	}
+	private void onCollisionPapaWithSoul(Soul soul) {
+		soul.collected = true;
+		score+= soul.getScore();
+		Gdx.app.log(TAG, "Soul reclaimed");
+	}
+	private void onCollisionPapaWithBook(BookOfPain book) {
+		book.collected= true;
+		lives--; //decrement lives, 
+		if(!isGameOver()){ //if you don't just kill yourself
+		score *= score*2;//double score when book is picked up
+		level.papaEmeritus.setBookPowerup(true);
+		Gdx.app.log(TAG, "Book of Pain read");
+		}
+		
+	}
+	/**
+	 * collision w/ goal
+	 */
+//	private void onCollisionPapaWithGoal(){
+//		goalReached = true;
+//		timeLeftGameOverDelay = Constants.TIME_DELAY_GAME_FINISHED);
+//		 Vector2 centerPosPapa =
+//				 new Vector2(level.papaEmeritus.position);
+//		 centerPosPapa.x += level.papaEmeritus.bounds.width;
+//		 spawnKnives(centerPosPapa, Constants.KNIVES_SPAWN_MAX,
+//		 Constants.KNIVES_SPAWN_RADIUS);
+	//}
+	/**
+	 * Test collisions
+	 */
+	private void testCollisions () {
+		r1.set(level.papaEmeritus.position.x, level.papaEmeritus.position.y,
+		level.papaEmeritus.bounds.width, level.papaEmeritus.bounds.height);
+		// Test collision: Papa <-> Rocks
+		for (Rock rock : level.rocks) {
+		r2.set(rock.position.x, rock.position.y, rock.bounds.width,
+		rock.bounds.height);
+		if (!r1.overlaps(r2)) continue;
+		
+		
+		onCollisionPapaWithRock(rock);
+		// IMPORTANT: must do all collisions for valid
+		// edge testing on rocks.
+		}
+		//Test collision Papa ->souls
+		for (Soul soul : level.souls) {
+			if (soul.collected) continue;
+			r2.set(soul.position.x, soul.position.y,
+					soul.bounds.width, soul.bounds.height);
+			if (!r1.overlaps(r2)) continue;
+			onCollisionPapaWithSoul(soul);
+			break;
+			}
+		//Test collision papa->books
+		for (BookOfPain book : level.books) {
+			if (book.collected) continue;
+			r2.set(book.position.x, book.position.y,
+					book.bounds.width, book.bounds.height);
+			if (!r1.overlaps(r2)) continue;
+			onCollisionPapaWithBook(book);
+			break;
+			}
+		// Test collision: Bunny Head <-> Goal
+//		if (!goalReached) {
+//		r2.set(level.goal.bounds);
+//		r2.x += level.goal.position.x;
+//		r2.y += level.goal.position.y;
+//		//if (r1.overlaps(r2)) onCollisionPapaWithGoal();
+//		}
+		}
+	
 	
 	/**
 	 * Update method for WorldController
@@ -79,14 +286,31 @@ public class WorldController implements InputProcessor {
 	 */
 	public void update(float deltaTime) {
 		handleDebugInput(deltaTime);
+		if (isGameOver()) {
+			timeLeftGameOverDelay -= deltaTime; //menu code needed
+			if (timeLeftGameOverDelay < 0) init();
+		} else {
+		handleInputGame(deltaTime);
+		}
+		level.update(deltaTime);
+		level.papaEmeritus.updateMotionY(deltaTime);
+		testCollisions();
+		b2world.step(deltaTime, 8, 3);
 		cameraHelper.update(deltaTime);
+		if(!isGameOver() && isPlayerInWater()){
+			lives--;
+			if(isGameOver())
+				timeLeftGameOverDelay = Constants.TIME_DELAY_GAME_OVER;
+			else
+				initLevel();
+		}
 	}
 
 	private void handleDebugInput(float deltaTime) {
 		if(Gdx.app.getType() != ApplicationType.Desktop) return;
 		
 		
-		
+		if(!cameraHelper.hasTarget(level.papaEmeritus)){
 		// Camera Controls (move)
 		float camMoveSpeed = 5 * deltaTime;
 		float camMoveSpeedAccelerationFactor = 5;
@@ -113,6 +337,40 @@ public class WorldController implements InputProcessor {
 		    -camZoomSpeed);
 		if (Gdx.input.isKeyPressed(Keys.SLASH)) cameraHelper.setZoom(1);
 	}
+	}
+
+	/**
+	 * Method to handle game input
+	 */
+	private void handleInputGame(float deltaTime){
+		if (cameraHelper.hasTarget(level.papaEmeritus)) {
+			// Player Movement
+			if (Gdx.input.isKeyPressed(Keys.LEFT)) {
+				level.papaEmeritus.body.setLinearVelocity(-1.0f,0f);
+			//level.papaEmeritus.velocity.x =
+			//-level.papaEmeritus.terminalVelocity.x;
+			} else if (Gdx.input.isKeyPressed(Keys.RIGHT)) {
+				level.papaEmeritus.body.setLinearVelocity(1.0f,0f);
+				//level.papaEmeritus.velocity.x =
+			  //level.papaEmeritus.terminalVelocity.x;
+			} else {
+			 // Execute auto-forward movement on non-desktop platform
+			if (Gdx.app.getType() != ApplicationType.Desktop) {
+			  level.papaEmeritus.velocity.x =
+			  level.papaEmeritus.terminalVelocity.x;
+			 }
+			}
+			// Papa Jump
+			if (Gdx.input.isTouched() ||
+			Gdx.input.isKeyPressed(Keys.SPACE)) {
+			level.papaEmeritus.setJumping(true);
+			} else {
+			 level.papaEmeritus.setJumping(false);
+			  }
+			 }
+		}
+
+			
 
 	/**
 	 * Method to move camera
@@ -138,6 +396,13 @@ public class WorldController implements InputProcessor {
 		if(keycode == Keys.R){
 			init();
 			Gdx.app.debug(TAG, "Game world reset");
+		}
+		// Toggle camera follow
+		else if (keycode == Keys.ENTER) {
+		cameraHelper.setTarget(cameraHelper.hasTarget()
+		? null: level.papaEmeritus);
+		Gdx.app.debug(TAG, "Camera follow enabled: "
+		+ cameraHelper.hasTarget());
 		}
 		return false;
 	}
@@ -176,5 +441,9 @@ public class WorldController implements InputProcessor {
 	public boolean scrolled(int amount) {
 		// TODO Auto-generated method stub
 		return false;
+	}
+	@Override
+	public void dispose() {
+		if(b2world != null) b2world.dispose();
 	}
 }

@@ -1,5 +1,6 @@
 package gameWorld;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 /**
  * Handles rendering of world's objects
  * as well as the GUI
@@ -17,6 +18,8 @@ public class WorldRenderer implements Disposable{
 	private OrthographicCamera cameraGUI;
 	private SpriteBatch batch;
 	private WorldController worldController;
+	private static final boolean DEBUG_DRAW_BOX2D_WORLD = true;
+	private Box2DDebugRenderer b2debugRenderer;
 	
 	public WorldRenderer(WorldController worldController) {
 		this.worldController = worldController;
@@ -34,6 +37,7 @@ public class WorldRenderer implements Disposable{
 		cameraGUI.position.set(0, 0, 0);
 		cameraGUI.setToOrtho(true); // flip y-axis
 		cameraGUI.update();
+		b2debugRenderer = new Box2DDebugRenderer();
 	}
 	/**
 	 * Generic Render method
@@ -53,6 +57,10 @@ public class WorldRenderer implements Disposable{
 		batch.begin();
 		worldController.level.render(batch);
 		batch.end();
+		if(DEBUG_DRAW_BOX2D_WORLD) {
+			b2debugRenderer.render(worldController.b2world, 
+					camera.combined);
+		}
 		}
 	/**
 	 * Render the gui by passing
@@ -68,8 +76,24 @@ public class WorldRenderer implements Disposable{
 		renderGuiExtraLive(batch);
 		// draw FPS text (anchored to bottom right edge)
 		renderGuiFpsCounter(batch);
+		//render game over text
+		//renderGuiGameOverMessage(batch);
 		batch.end();
 		}
+	/**
+	 * Renders the Game Over message
+	 */
+//	private void renderGuiGameOverMessage (SpriteBatch batch) {
+//		float x = cameraGUI.viewportWidth / 2;
+//		float y = cameraGUI.viewportHeight / 2;
+//		if (worldController.isGameOver()) {
+//		BitmapFont fontGameOver = Assets.instance.fonts.defaultBig;
+//		fontGameOver.setColor(1, 0.75f, 0.25f, 1);
+//		fontGameOver.drawMultiLine(batch, "YOU FAILED TO BRING THE LIGHT TO THE PEOPLE, GAME OVER", x, y, 0,
+//		BitmapFont.HAlignment.CENTER);
+//		fontGameOver.setColor(1, 1, 1, 1);
+//		}
+//		}
     /**
      * Handle resizing
      * @param width
@@ -86,6 +110,7 @@ public class WorldRenderer implements Disposable{
 		cameraGUI.viewportHeight / 2, 0);
 		cameraGUI.update();
 	}
+
 	/**
 	 * Renders the score
 	 */

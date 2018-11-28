@@ -6,6 +6,11 @@ package gameObjects;
  *
  */
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.physics.box2d.Body;
+import com.badlogic.gdx.physics.box2d.BodyDef;
+import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
+import com.badlogic.gdx.physics.box2d.FixtureDef;
+import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import gameWorld.Assets;
 public class Rock extends AbstractGameObject{
@@ -26,7 +31,7 @@ public class Rock extends AbstractGameObject{
     	 dimension.set(1,1.5f);
     	 regEdge = Assets.instance.rock.edge;
     	 regMiddle = Assets.instance.rock.middle;
-    	 //Start lenght of this rock
+    	 //Start length of this rock
     	 setLength(1);
      }
      /**
@@ -35,6 +40,8 @@ public class Rock extends AbstractGameObject{
       */
      public void setLength(int length) {
     	 this.length = length;
+    	 //bounds box for collision detection
+    	 bounds.set(0,0,dimension.x * length, dimension.y);
      }
      /**
       * Increase the length
@@ -60,11 +67,6 @@ public class Rock extends AbstractGameObject{
     			 scale.x,scale.y,rotation,reg.getRegionX(), reg.getRegionY(),
     			 reg.getRegionWidth(),reg.getRegionHeight(),false,false);
     	 
-//    	 batch.draw(reg.getTexture(),position.x+relX,position.y +relY,
-//    			 origin.x,origin.y,reg.getRegionWidth(),reg.getRegionHeight(),
-//    			 scale.x,scale.y,rotation,reg.getRegionX(), reg.getRegionY(),
-//    			 reg.getRegionWidth(),reg.getRegionHeight(),false,false);
-    	 
     	 //Draw middle
     	 relX=0;
     	 reg=regMiddle;
@@ -84,4 +86,20 @@ public class Rock extends AbstractGameObject{
     			 reg.getRegionY(),reg.getRegionWidth(),reg.getRegionHeight(),
     			 true,false);
      }
+     /**
+      * Update the rocks
+      */
+//     @Override
+//     public void update (float deltaTime) {
+//     super.update(deltaTime);
+//     floatCycleTimeLeft -= deltaTime;
+//     if (floatCycleTimeLeft<= 0) {
+//     floatCycleTimeLeft = FLOAT_CYCLE_TIME;
+//     floatingDownwards = !floatingDownwards;
+//     body.setLinearVelocity(0, FLOAT_AMPLITUDE
+//     * (floatingDownwards ? -1 : 1));
+//     } else {
+//     body.setLinearVelocity(body.getLinearVelocity().scl(0.98f));
+//     }
+//     }
 }

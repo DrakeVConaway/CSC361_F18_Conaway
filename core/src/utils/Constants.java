@@ -13,7 +13,8 @@ public class Constants {
 	public static final float VIEWPORT_GUI_HEIGHT = 480.0f;
 	//Amount of extra lives at start
 	public static final int LIVES_START = 3;
-	
+	//Delay after game ove
+	public static final float TIME_DELAY_GAME_OVER = 3;
 	
 	// Location of image file for level 01
 	public static final String LEVEL_01 = "levels/level-01.png";
