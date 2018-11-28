@@ -21,4 +21,16 @@ public class Constants {
 	
 	//constants 
 	public static final String TEXTURE_ATLAS_OBJECTS = "images/Hellferno.atlas";
+	public static final String TEXTURE_ATLAS_UI =
+			"images/hellferno-ui.pack";
+			
+	public static final String TEXTURE_ATLAS_LIBGDX_UI =
+			"images/uiskin.atlas";
+			// Location of description file for skins
+			
+	public static final String SKIN_LIBGDX_UI =
+			"images/uiskin.json";
+			
+	public static final String SKIN_CANYONBUNNY_UI =
+			"images/hellferno-ui.json";
 }
