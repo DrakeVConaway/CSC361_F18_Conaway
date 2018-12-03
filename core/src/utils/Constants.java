@@ -22,7 +22,7 @@ public class Constants {
 	//constants 
 	public static final String TEXTURE_ATLAS_OBJECTS = "images/Hellferno.atlas";
 	public static final String TEXTURE_ATLAS_UI =
-			"images/hellferno-ui.pack";
+			"images/hellferno-ui.pack.atlas"; //need to refactor to hellferno
 			
 	public static final String TEXTURE_ATLAS_LIBGDX_UI =
 			"images/uiskin.atlas";
@@ -31,6 +31,8 @@ public class Constants {
 	public static final String SKIN_LIBGDX_UI =
 			"images/uiskin.json";
 			
-	public static final String SKIN_CANYONBUNNY_UI =
-			"images/hellferno-ui.json";
+	public static final String SKIN_CANYONBUNNY_UI = //need to refactor to hellferno
+			"images/canyonbunny-ui.json";
+
+	public static final String PREFERENCES = "hellferno.prefs";
 }

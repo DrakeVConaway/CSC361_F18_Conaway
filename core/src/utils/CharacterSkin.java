@@ -1,12 +1,11 @@
 package utils;
 import com.badlogic.gdx.graphics.Color;
-public class CharacterSkin {
 
 	public enum CharacterSkin {
 		WHITE("White", 1.0f, 1.0f, 1.0f),
 		GRAY("Gray", 0.7f, 0.7f, 0.7f),
 		BROWN("Brown", 0.7f, 0.5f, 0.3f);
-	}
+	
 	private String name;
 	private Color color = new Color();
 	private CharacterSkin (String name, float r, float g, float b) {
@@ -23,8 +22,5 @@ public class CharacterSkin {
 		return color;
 	}
 
-	public static CharacterSkin[] values() {
-		// TODO Auto-generated method stub
-		return null;
+	
 	}
-}

@@ -172,7 +172,7 @@ private void onOptionsClicked() {
 		return layer;
 	}
 
-	private Table buildObjectsLayer() {
+	private Table buildObjectsLayer() { //here m8tey
 		Table layer = new Table();
 		// + Coins
 		imgSouls = new Image(skinCanyonBunny, "souls");
@@ -244,7 +244,7 @@ private void onOptionsClicked() {
 	}
 	
 	private void onSaveClicked() {
-		saveSettings();
+		saveSettigns();
 		onCancelClicked();
 		}
 	
@@ -305,7 +305,7 @@ private void onOptionsClicked() {
 		});
 		tbl.add(selCharSkin).width(120).padRight(20);
 		// + Skin preview image
-		imgCharSkin = new Image(Assets.instance.bunny.head);
+		imgCharSkin = new Image(Assets.instance.character.character);
 		tbl.add(imgCharSkin).width(50).height(50);
 		return tbl;
 		}
