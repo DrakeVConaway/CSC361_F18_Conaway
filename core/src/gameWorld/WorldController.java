@@ -12,6 +12,8 @@ import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.InputProcessor;
+
+import utils.AudioManager;
 import utils.CameraHelper;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.utils.Array;
@@ -217,11 +219,13 @@ rock.position.x + rock.bounds.width / 2.0f;
 	}
 	private void onCollisionPapaWithSoul(Soul soul) {
 		soul.collected = true;
+		AudioManager.instance.play(Assets.instance.sounds.pickupSoul);
 		score+= soul.getScore();
 		Gdx.app.log(TAG, "Soul reclaimed");
 	}
 	private void onCollisionPapaWithBook(BookOfPain book) {
 		book.collected= true;
+		AudioManager.instance.play(Assets.instance.sounds.pickupBook);
 		lives--; //decrement lives, 
 		if(!isGameOver()){ //if you don't just kill yourself
 		score *= score*2;//double score when book is picked up
@@ -307,6 +311,7 @@ rock.position.x + rock.bounds.width / 2.0f;
 		b2world.step(deltaTime, 8, 3);
 		cameraHelper.update(deltaTime);
 		if(!isGameOver() && isPlayerInWater()){
+			AudioManager.instance.play(Assets.instance.sounds.liveLost);
 			lives--;
 			if(isGameOver())
 				timeLeftGameOverDelay = Constants.TIME_DELAY_GAME_OVER;
