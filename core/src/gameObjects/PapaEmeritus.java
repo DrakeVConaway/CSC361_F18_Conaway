@@ -5,7 +5,13 @@ package gameObjects;
  *
  */
 import com.badlogic.gdx.Gdx;
+
 import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.physics.box2d.Body;
+import com.badlogic.gdx.physics.box2d.BodyDef;
+import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
+import com.badlogic.gdx.physics.box2d.Fixture;
+import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.graphics.g2d.ParticleEffect;
 
 import utils.AudioManager;
@@ -14,7 +20,9 @@ import utils.GamePreferences;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import gameWorld.Assets;
+import gameWorld.WorldController;
 import utils.Constants;
+
 public class PapaEmeritus extends AbstractGameObject{
 	public static final String TAG = Character.class.getName();
 	
@@ -32,6 +40,7 @@ public class PapaEmeritus extends AbstractGameObject{
 	public JUMP_STATE jumpState;
 	public boolean hasBookPowerup;
 	public ParticleEffect dustParticles = new ParticleEffect();
+	public Fixture playerPhysicsFixture;
 	/**
 	 * Awaken Papa
 	 */
@@ -46,7 +55,16 @@ public class PapaEmeritus extends AbstractGameObject{
 		origin.set(dimension.x / 2, dimension.y / 2);
 		// Bounding box for collision detection
 		bounds.set(0, 0, dimension.x, dimension.y);
-		// Set physics values
+		//Create the body
+		bodyDef = new BodyDef();
+		bodyDef.type = BodyType.DynamicBody;
+		
+		Body box = WorldController.b2world.createBody(bodyDef);
+		PolygonShape poly = new PolygonShape();
+		poly.setAsBox(0.5f, 0.5f);
+		playerPhysicsFeature = box.createFixture(poly,1)
+		/**
+		 * // Set physics values
 		terminalVelocity.set(3.0f, 4.0f);
 		friction.set(12.0f, 0.0f);
 		acceleration.set(0.0f, -25.0f);
@@ -57,6 +75,7 @@ public class PapaEmeritus extends AbstractGameObject{
 		timeJumping = 0;
 		// Power-ups
 		hasBookPowerup = false;
+		*/
 		//Particle effect
 		dustParticles.load(Gdx.files.internal("particles/dust.pfx"), 
 				Gdx.files.internal("particles"));

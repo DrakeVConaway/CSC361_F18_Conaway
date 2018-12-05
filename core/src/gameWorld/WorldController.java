@@ -48,7 +48,7 @@ public class WorldController extends InputAdapter implements Disposable {
 	public int lives;
 	public int score;
 	private boolean goalReached;
-	public World b2world;
+	public static World b2world;
 	private Vector2 movement = new Vector2();
 	// Rectangles for collision detection
 	private Rectangle r1 = new Rectangle();
