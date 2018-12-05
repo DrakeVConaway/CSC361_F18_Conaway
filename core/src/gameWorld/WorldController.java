@@ -91,7 +91,7 @@ public class WorldController extends InputAdapter implements Disposable {
 	 * WorldController
 	 */
 	public void init() {
-		 b2world = new World(new Vector2(0,-9.81f),true);
+		 b2world = new World(new Vector2(0,-200f),true);
 		Gdx.input.setInputProcessor(this);
 		cameraHelper = new CameraHelper();
 		lives = Constants.LIVES_START;
@@ -309,7 +309,7 @@ rock.position.x + rock.bounds.width / 2.0f;
 		level.update(deltaTime);
 		level.papaEmeritus.updateMotionY(deltaTime);
 		testCollisions();
-		b2world.step(deltaTime, 8, 3);
+		b2world.step(deltaTime, 4, 4);
 		cameraHelper.update(deltaTime);
 		if(!isGameOver() && isPlayerInWater()){
 			AudioManager.instance.play(Assets.instance.sounds.liveLost);
