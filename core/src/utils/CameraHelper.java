@@ -18,6 +18,7 @@ public class CameraHelper {
    private Vector2 position;
    private float zoom;
    private AbstractGameObject target;
+   private final float FOLLOW_SPEED = 4.0f; //for lerp to smooth mvmnts
    
    public CameraHelper(){
 	   position = new Vector2();
@@ -26,9 +27,9 @@ public class CameraHelper {
    
    public void update(float deltaTime){
 	   if(!hasTarget()) return;
-	   
-	   position.x = target.position.x + target.origin.x;
-	   position.y = target.position.y + target.origin.y;
+	   position.lerp(target.position, FOLLOW_SPEED * deltaTime);
+	  // position.x = target.position.x + target.origin.x;
+	   //position.y = target.position.y + target.origin.y;
 	// Prevent camera from moving down too far
 	   position.y = Math.max(-1f, position.y);
    }
