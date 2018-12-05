@@ -313,6 +313,7 @@ rock.position.x + rock.bounds.width / 2.0f;
 			else
 				initLevel();
 		}
+		level.mountains.updateScrollPosition(cameraHelper.getPosition());
 	}
 
 	private void handleDebugInput(float deltaTime) {
@@ -355,13 +356,13 @@ rock.position.x + rock.bounds.width / 2.0f;
 		if (cameraHelper.hasTarget(level.papaEmeritus)) {
 			// Player Movement
 			if (Gdx.input.isKeyPressed(Keys.LEFT)) {
-				level.papaEmeritus.body.setLinearVelocity(-1.0f,0f);
-			//level.papaEmeritus.velocity.x =
-			//-level.papaEmeritus.terminalVelocity.x;
+				//level.papaEmeritus.body.setLinearVelocity(-1.0f,0f);
+			level.papaEmeritus.velocity.x =
+			-level.papaEmeritus.terminalVelocity.x;
 			} else if (Gdx.input.isKeyPressed(Keys.RIGHT)) {
-				level.papaEmeritus.body.setLinearVelocity(1.0f,0f);
-				//level.papaEmeritus.velocity.x =
-			  //level.papaEmeritus.terminalVelocity.x;
+				//level.papaEmeritus.body.setLinearVelocity(1.0f,0f);
+				level.papaEmeritus.velocity.x =
+			  level.papaEmeritus.terminalVelocity.x;
 			} else {
 			 // Execute auto-forward movement on non-desktop platform
 			if (Gdx.app.getType() != ApplicationType.Desktop) {
