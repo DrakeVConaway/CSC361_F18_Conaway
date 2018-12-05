@@ -1,6 +1,7 @@
 package Screens;
 import com.badlogic.gdx.Game;
 
+import utils.AudioManager;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Color;
@@ -246,12 +247,14 @@ private void onOptionsClicked() {
 	private void onSaveClicked() {
 		saveSettigns();
 		onCancelClicked();
+		AudioManager.instance.onSettingsUpdated();
 		}
 	
 	private void onCancelClicked() {
 		btnMenuPlay.setVisible(true);
 		btnMenuOptions.setVisible(true);
 		winOptions.setVisible(false);
+		AudioManager.instance.onSettingsUpdated();
 		}
 	/**
 	 * build audio settings

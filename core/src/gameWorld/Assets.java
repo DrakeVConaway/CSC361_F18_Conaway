@@ -3,6 +3,8 @@ package gameWorld;
  * Assets for the new game
  */
 import com.badlogic.gdx.Gdx; 
+import com.badlogic.gdx.audio.Music;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.assets.AssetDescriptor;
 import com.badlogic.gdx.assets.AssetErrorListener;
 import com.badlogic.gdx.assets.AssetManager;
@@ -28,6 +30,8 @@ public class Assets implements Disposable, AssetErrorListener {
    public AssetBookOfPain book;
    public AssetLevelDecoration levelDecoration;
    public AssetFonts fonts;
+   public AssetSounds sounds;
+   public AssetMusic music;
   
    /**
     * Initialization 
@@ -40,6 +44,14 @@ public class Assets implements Disposable, AssetErrorListener {
 	// load texture atlas
 	assetManager.load(Constants.TEXTURE_ATLAS_OBJECTS,
 	  TextureAtlas.class);
+	//load sounds
+	assetManager.load("sounds/jump.wav",Sound.class);
+	assetManager.load("sounds/pickup_coin.wav",Sound.class);
+	assetManager.load("sounds/live_lost.wav",Sound.class);
+	assetManager.load("sounds/pickup_feather.wav",Sound.class);
+	//load Music
+	assetManager.load("music/keith303_-_brand_new_highscore.mp3",
+			Music.class);
 	// start loading assets and wait until finished
 	assetManager.finishLoading();
 	   Gdx.app.debug(TAG, "# of assets loaded: "
@@ -62,7 +74,37 @@ public class Assets implements Disposable, AssetErrorListener {
    currency = new AssetCurrency(atlas);
    book = new AssetBookOfPain(atlas);
    levelDecoration = new AssetLevelDecoration(atlas);
+   sounds = new AssetSounds(assetManager);
+   music = new AssetMusic(assetManager);
    }
+   
+   
+   /**
+    * assetSounds internal class
+    */
+   public class AssetSounds{
+	   public final Sound jump;
+	   public final Sound pickupSoul;
+	   public final Sound liveLost;
+	   public final Sound pickupBook;
+	   public AssetSounds(AssetManager am) {
+		   jump = am.get("sounds/jump.wav",Sound.class);
+		   pickupSoul = am.get("sounds/pickup_coin.wav",Sound.class);
+		   liveLost = am.get("sounds/live_lost.wav",Sound.class);
+		   pickupBook = am.get("sounds/pickup_feather.wav",Sound.class);
+	   }
+   }
+   /**
+    * Inner class for music
+    */
+   public class AssetMusic{
+	   public final Music song01;
+	   public AssetMusic(AssetManager am) {
+		   song01 = am.get("music/keith303_-_brand_new_highscore.mp3",
+				   Music.class);//need to add custom mp3 for papa
+	   }
+   }
+   
    /**
     * Class for the asset managing of main character
     * sprite

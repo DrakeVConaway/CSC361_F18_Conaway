@@ -5,6 +5,10 @@ package gameObjects;
  *
  */
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.graphics.g2d.ParticleEffect;
+
+import utils.AudioManager;
 import utils.CharacterSkin;
 import utils.GamePreferences;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -27,6 +31,7 @@ public class PapaEmeritus extends AbstractGameObject{
 	public float timeJumping;
 	public JUMP_STATE jumpState;
 	public boolean hasBookPowerup;
+	public ParticleEffect dustParticles = new ParticleEffect();
 	/**
 	 * Awaken Papa
 	 */
@@ -52,11 +57,15 @@ public class PapaEmeritus extends AbstractGameObject{
 		timeJumping = 0;
 		// Power-ups
 		hasBookPowerup = false;
+		//Particle effect
+		dustParticles.load(Gdx.files.internal("particles/dust.pfx"), 
+				Gdx.files.internal("particles"));
 	}
 	public void setJumping (boolean jumpKeyPressed) {
 		switch (jumpState) {
 		 case GROUNDED: // Character is standing on a platform
 		  if (jumpKeyPressed) {
+		  AudioManager.instance.play(Assets.instance.sounds.jump); 
 		   // Start counting jump time from the beginning
 		   timeJumping = 0;
 		   jumpState = JUMP_STATE.JUMP_RISING;
@@ -80,6 +89,7 @@ public class PapaEmeritus extends AbstractGameObject{
 	}
 	@Override
 	public void updateMotionY(float deltaTime) {
+		dustParticles.update(deltaTime); //update the particles 
 		switch(jumpState) {
 		case GROUNDED:
 			jumpState = JUMP_STATE.FALLING;
@@ -102,6 +112,7 @@ public class PapaEmeritus extends AbstractGameObject{
 			}
 		}
 		if(jumpState != JUMP_STATE.GROUNDED) {
+			dustParticles.allowCompletion();
 			super.updateMotionY(deltaTime);
 		}
 	}
@@ -146,5 +157,7 @@ public class PapaEmeritus extends AbstractGameObject{
 		 
 		// Reset color to white
 		batch.setColor(1, 1, 1, 1);
+		//Draw particles
+		dustParticles.draw(batch);
 		}
 }
