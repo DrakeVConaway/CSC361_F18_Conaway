@@ -385,7 +385,7 @@ rock.position.x + rock.bounds.width / 2.0f;
 			Gdx.input.isKeyPressed(Keys.SPACE)) {
 			level.papaEmeritus.setJumping(true);
 			velocity.y += 8;
-			
+			level.papaEmeritus.body.applyLinearImpulse(velocity, level.papaEmeritus.body.getPosition(), true);
 			} else {
 			level.papaEmeritus.setJumping(false);
 			//velocity.y -= 4;
