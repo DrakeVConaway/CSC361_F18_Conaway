@@ -1,5 +1,6 @@
 package gameWorld;
 import com.badlogic.gdx.Gdx;
+import utils.GamePreferences;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 /**
  * Handles rendering of world's objects
@@ -75,6 +76,8 @@ public class WorldRenderer implements Disposable{
 		// draw extra lives icon + text (anchored to top right edge)
 		renderGuiExtraLive(batch);
 		// draw FPS text (anchored to bottom right edge)
+		if (GamePreferences.instance.showFpsCounter)
+			renderGuiFpsCounter(batch);
 		renderGuiFpsCounter(batch);
 		//render game over text
 		//renderGuiGameOverMessage(batch);
