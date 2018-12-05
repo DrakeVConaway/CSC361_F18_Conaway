@@ -91,6 +91,7 @@ public class WorldController extends InputAdapter implements Disposable {
 	 * WorldController
 	 */
 	public void init() {
+		 b2world = new World(new Vector2(0,-9.81f),true);
 		Gdx.input.setInputProcessor(this);
 		cameraHelper = new CameraHelper();
 		lives = Constants.LIVES_START;
@@ -101,8 +102,8 @@ public class WorldController extends InputAdapter implements Disposable {
 	 * Initials the physics engine
 	 */
 	 private void initPhysics(){
-		 if(b2world != null) b2world.dispose();
-		 b2world = new World(new Vector2(0,-9.81f),true);
+		// if(b2world != null) b2world.dispose();
+		
 		 //Rocks
 		 Vector2 origin = new Vector2();
 		 for(Rock rock: level.rocks){
@@ -358,31 +359,39 @@ rock.position.x + rock.bounds.width / 2.0f;
 	 * Method to handle game input
 	 */
 	private void handleInputGame(float deltaTime){
+		Vector2 velocity = new Vector2(0,0);
+		level.papaEmeritus.playerPhysicsFixture.setFriction(0f);
 		if (cameraHelper.hasTarget(level.papaEmeritus)) {
 			// Player Movement
 			if (Gdx.input.isKeyPressed(Keys.LEFT)) {
-				//level.papaEmeritus.body.setLinearVelocity(-1.0f,0f);
-			level.papaEmeritus.velocity.x =
-			-level.papaEmeritus.terminalVelocity.x;
+				velocity.x -= 4;
+			//level.papaEmeritus.velocity.x =
+			//-level.papaEmeritus.terminalVelocity.x;
 			} else if (Gdx.input.isKeyPressed(Keys.RIGHT)) {
+				velocity.x += 4;
 				//level.papaEmeritus.body.setLinearVelocity(1.0f,0f);
-				level.papaEmeritus.velocity.x =
-			  level.papaEmeritus.terminalVelocity.x;
-			} else {
-			 // Execute auto-forward movement on non-desktop platform
+				//level.papaEmeritus.velocity.x =
+			  //level.papaEmeritus.terminalVelocity.x;
+			} 
+			
+			  //Execute auto-forward movement on non-desktop platform
 			if (Gdx.app.getType() != ApplicationType.Desktop) {
-			  level.papaEmeritus.velocity.x =
-			  level.papaEmeritus.terminalVelocity.x;
+			 // level.papaEmeritus.velocity.x =
+			  //level.papaEmeritus.terminalVelocity.x;
 			 }
 			}
 			// Papa Jump
-			if (Gdx.input.isTouched() ||
+			if (//Gdx.input.isTouched() ||
 			Gdx.input.isKeyPressed(Keys.SPACE)) {
 			level.papaEmeritus.setJumping(true);
+			velocity.y += 8;
+			
 			} else {
-			 level.papaEmeritus.setJumping(false);
+			level.papaEmeritus.setJumping(false);
+			//velocity.y -= 4;
 			  }
-			 }
+
+			level.papaEmeritus.body.setLinearVelocity(velocity);
 		}
 
 			

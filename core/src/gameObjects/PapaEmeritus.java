@@ -62,7 +62,12 @@ public class PapaEmeritus extends AbstractGameObject{
 		Body box = WorldController.b2world.createBody(bodyDef);
 		PolygonShape poly = new PolygonShape();
 		poly.setAsBox(0.5f, 0.5f);
-		playerPhysicsFeature = box.createFixture(poly,1)
+		playerPhysicsFixture = box.createFixture(poly,1);
+		poly.dispose();
+		
+		body = box;
+		body.setUserData(this);
+		
 		/**
 		 * // Set physics values
 		terminalVelocity.set(3.0f, 4.0f);
@@ -81,6 +86,7 @@ public class PapaEmeritus extends AbstractGameObject{
 				Gdx.files.internal("particles"));
 	}
 	public void setJumping (boolean jumpKeyPressed) {
+		jumpState = JUMP_STATE.FALLING;
 		switch (jumpState) {
 		 case GROUNDED: // Character is standing on a platform
 		  if (jumpKeyPressed) {
@@ -98,6 +104,7 @@ public class PapaEmeritus extends AbstractGameObject{
 			//books don't make you fly, needs tweaked or
 			//removed
 		case JUMP_FALLING: // Falling down after jump
+			velocity.y -= 16.0f;
 //			if (jumpKeyPressed && hasBookPowerup) {
 //				timeJumping = JUMP_TIME_OFFSET_FLYING;
 //				jumpState = JUMP_STATE.JUMP_RISING;
@@ -109,31 +116,31 @@ public class PapaEmeritus extends AbstractGameObject{
 	@Override
 	public void updateMotionY(float deltaTime) {
 		dustParticles.update(deltaTime); //update the particles 
-		switch(jumpState) {
-		case GROUNDED:
-			jumpState = JUMP_STATE.FALLING;
-			if(velocity.x !=0) {	
-			}
-		case JUMP_RISING:
-			timeJumping += deltaTime;
-			if(timeJumping <= JUMP_TIME_MAX) {
-				velocity.y = terminalVelocity.y;
-			}
-			break;
-		case FALLING:
-		    break;
-		case JUMP_FALLING:
-			//add delta to track jump time
-			timeJumping += deltaTime;
-			//jump to min height
-			if(timeJumping > 0 && timeJumping <= JUMP_TIME_MIN) {
-				velocity.y = -terminalVelocity.y;
-			}
-		}
-		if(jumpState != JUMP_STATE.GROUNDED) {
+//		switch(jumpState) {
+//		case GROUNDED:
+//			jumpState = JUMP_STATE.FALLING;
+//			if(velocity.x !=0) {	
+//			}
+//		case JUMP_RISING:
+//			timeJumping += deltaTime;
+//			if(timeJumping <= JUMP_TIME_MAX) {
+//				velocity.y = terminalVelocity.y;
+//			}
+//			break;
+//		case FALLING:
+//		    break;
+//		case JUMP_FALLING:
+//			//add delta to track jump time
+//			timeJumping += deltaTime;
+//			//jump to min height
+//			if(timeJumping > 0 && timeJumping <= JUMP_TIME_MIN) {
+//				velocity.y = -terminalVelocity.y;
+//			}
+//		}
+//		if(jumpState != JUMP_STATE.GROUNDED) {
 			dustParticles.allowCompletion();
-			super.updateMotionY(deltaTime);
-		}
+//			super.updateMotionY(deltaTime);
+//		}
 	}
 	/**
 	 * What to do when the book 
@@ -168,7 +175,8 @@ public class PapaEmeritus extends AbstractGameObject{
 		//Draw
 		// Draw image
 		reg = regPapa;
-		 batch.draw(reg.getTexture(), position.x, position.y, origin.x,
+		float off = .5f;
+		 batch.draw(reg.getTexture(), position.x -off, position.y -off, origin.x,
 		origin.y, dimension.x, dimension.y, scale.x, scale.y, rotation,
 		reg.getRegionX(), reg.getRegionY(), reg.getRegionWidth(),
 		reg.getRegionHeight(), viewDirection == VIEW_DIRECTION.LEFT,

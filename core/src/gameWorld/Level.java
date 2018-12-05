@@ -8,6 +8,7 @@ import com.badlogic.gdx.Gdx;
 
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 import gameObjects.BookOfPain;
 import gameObjects.PapaEmeritus;
@@ -62,7 +63,8 @@ public class Level {
   
   public Level(String filename) {
 	  init(filename);
-	  papaEmeritus.position.y = 1.0f;
+	  Vector2 pos = new Vector2(0, 0);
+	  papaEmeritus.body.setTransform(pos, 0);
   }
   
    private void init(String filename) {
@@ -113,8 +115,8 @@ public class Level {
 				   System.out.println(currentPixel);
 				   obj = new PapaEmeritus();
 				   offsetHeight = 2.0f;
-				   obj.position.set(pixelX +1f ,baseHeight * obj.dimension.y +
-						   offsetHeight+1);
+				   obj.position.set(pixelX +1.0f ,baseHeight * obj.dimension.y +
+						   offsetHeight);
 				   papaEmeritus = (PapaEmeritus)obj;
 			   }
 			   //book of pain
@@ -128,8 +130,8 @@ public class Level {
 			   //souls
 			   else if(BLOCK_TYPE.ITEM_CURRENCY.sameColor(currentPixel)) {
 				   obj = new Soul();
-				   offsetHeight = -1.5f;
-				   obj.position.set(pixelX,baseHeight * obj.dimension.y
+				  // offsetHeight = -1.5f;
+				   obj.position.set(pixelX ,baseHeight * obj.dimension.y
 				   + offsetHeight);
 				   souls.add((Soul)obj);
 			   }
