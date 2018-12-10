@@ -37,7 +37,7 @@ public class PapaEmeritus extends AbstractGameObject{
 	private TextureRegion regPapa;
 	public VIEW_DIRECTION viewDirection;
 	public float timeJumping;
-	public JUMP_STATE jumpState;
+	public boolean grounded = true;
 	public boolean hasBookPowerup;
 	public ParticleEffect dustParticles = new ParticleEffect();
 	public Fixture playerPhysicsFixture;
@@ -85,63 +85,7 @@ public class PapaEmeritus extends AbstractGameObject{
 		dustParticles.load(Gdx.files.internal("particles/dust.pfx"), 
 				Gdx.files.internal("particles"));
 	}
-	public void setJumping (boolean jumpKeyPressed) {
-		jumpState = JUMP_STATE.FALLING;
-		switch (jumpState) {
-		 case GROUNDED: // Character is standing on a platform
-		  if (jumpKeyPressed) {
-		  AudioManager.instance.play(Assets.instance.sounds.jump); 
-		   // Start counting jump time from the beginning
-		   timeJumping = 0;
-		   jumpState = JUMP_STATE.JUMP_RISING;
-		}
-		break;
-		case JUMP_RISING: // Rising in the air
-		  if (!jumpKeyPressed)
-		  jumpState = JUMP_STATE.JUMP_FALLING;
-		  break;
-		case FALLING:// Falling down
-			//books don't make you fly, needs tweaked or
-			//removed
-		case JUMP_FALLING: // Falling down after jump
-			velocity.y -= 16.0f;
-//			if (jumpKeyPressed && hasBookPowerup) {
-//				timeJumping = JUMP_TIME_OFFSET_FLYING;
-//				jumpState = JUMP_STATE.JUMP_RISING;
-//				}
-				break;
-//				}
-				}
-	}
-	@Override
-	public void updateMotionY(float deltaTime) {
-		dustParticles.update(deltaTime); //update the particles 
-//		switch(jumpState) {
-//		case GROUNDED:
-//			jumpState = JUMP_STATE.FALLING;
-//			if(velocity.x !=0) {	
-//			}
-//		case JUMP_RISING:
-//			timeJumping += deltaTime;
-//			if(timeJumping <= JUMP_TIME_MAX) {
-//				velocity.y = terminalVelocity.y;
-//			}
-//			break;
-//		case FALLING:
-//		    break;
-//		case JUMP_FALLING:
-//			//add delta to track jump time
-//			timeJumping += deltaTime;
-//			//jump to min height
-//			if(timeJumping > 0 && timeJumping <= JUMP_TIME_MIN) {
-//				velocity.y = -terminalVelocity.y;
-//			}
-//		}
-//		if(jumpState != JUMP_STATE.GROUNDED) {
-			dustParticles.allowCompletion();
-//			super.updateMotionY(deltaTime);
-//		}
-	}
+
 	/**
 	 * What to do when the book 
 	 * is picked up
