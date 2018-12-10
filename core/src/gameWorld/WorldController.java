@@ -190,7 +190,7 @@ rock.position.x + rock.bounds.width / 2.0f;
 			
 			papaEmeritus.position.x = rock.position.x -
 			papaEmeritus.bounds.width;
-			jumpTime = 1;
+			//jumpTime = 1;
 			
 			}
 			
@@ -364,18 +364,18 @@ rock.position.x + rock.bounds.width / 2.0f;
 		//if(!jumpPressed) {
 			if (
 			Gdx.input.isKeyPressed(Keys.SPACE)) {
-				if(jumpTime > 0) {
+				//if(jumpTime > 0) {
 				//jumpPressed = true;
 //				if(level.papaEmeritus.grounded) {
 //			level.papaEmeritus.grounded = false;
 			
-			velocity.y += 40;
+			velocity.y += 8;
 			
 			level.papaEmeritus.body.applyLinearImpulse(velocity, level.papaEmeritus.body.getPosition(), true);
-			jumpTime = jumpTime - 1;
+			//jumpTime = jumpTime - 1;
 		
 			}
-			}
+		//	}
 				//}
 			//}
 			level.papaEmeritus.body.setLinearVelocity(velocity);
