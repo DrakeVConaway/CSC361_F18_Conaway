@@ -93,7 +93,7 @@ public class WorldController extends InputAdapter implements Disposable {
 	 * WorldController
 	 */
 	public void init() {
-		 b2world = new World(new Vector2(0,-200f),true);
+		 b2world = new World(new Vector2(0,-280f),true);
 		Gdx.input.setInputProcessor(this);
 		cameraHelper = new CameraHelper();
 		lives = Constants.LIVES_START;
