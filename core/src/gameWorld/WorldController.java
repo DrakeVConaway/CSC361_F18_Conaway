@@ -48,12 +48,14 @@ public class WorldController extends InputAdapter implements Disposable {
 	public int lives;
 	public int score;
 	private boolean goalReached;
-	public World b2world;
+	public static World b2world;
+	public boolean jumpPressed = false;
 	private Vector2 movement = new Vector2();
 	// Rectangles for collision detection
 	private Rectangle r1 = new Rectangle();
 	private Rectangle r2 = new Rectangle();
 	private float timeLeftGameOverDelay;
+	int jumpTime = 1;
 	private Game game;
 	
 	public boolean isGameOver(){
@@ -91,6 +93,7 @@ public class WorldController extends InputAdapter implements Disposable {
 	 * WorldController
 	 */
 	public void init() {
+		 b2world = new World(new Vector2(0,-200f),true);
 		Gdx.input.setInputProcessor(this);
 		cameraHelper = new CameraHelper();
 		lives = Constants.LIVES_START;
@@ -101,8 +104,8 @@ public class WorldController extends InputAdapter implements Disposable {
 	 * Initials the physics engine
 	 */
 	 private void initPhysics(){
-		 if(b2world != null) b2world.dispose();
-		 b2world = new World(new Vector2(0,-9.81f),true);
+		// if(b2world != null) b2world.dispose();
+		
 		 //Rocks
 		 Vector2 origin = new Vector2();
 		 for(Rock rock: level.rocks){
@@ -177,6 +180,7 @@ public class WorldController extends InputAdapter implements Disposable {
 float heightDifference = Math.abs(papaEmeritus.position.y
 - ( rock.position.y + rock.bounds.height));
    boolean hitLeftEdge = false;
+ 
 if (heightDifference > .25f) {//was .25 
 	 hitLeftEdge = papaEmeritus.position.x > 
 rock.position.x + rock.bounds.width / 2.0f;
@@ -186,36 +190,14 @@ rock.position.x + rock.bounds.width / 2.0f;
 			
 			papaEmeritus.position.x = rock.position.x -
 			papaEmeritus.bounds.width;
+			//jumpTime = 1;
+			
 			}
+			
 				return;
 			}
-       
-			switch (papaEmeritus.jumpState) {
-				 case GROUNDED:
-					// papaEmeritus.terminalVelocity.setZero();	
-					 papaEmeritus.position.x = rock.position.x;
-					 papaEmeritus.terminalVelocity.set(3.0f, 4.0f);
-					 break;
-				 case FALLING:
-					 if(hitLeftEdge) {
-						 papaEmeritus.position.x = rock.position.x + rock.bounds.width;
-						} else {
-//							
-							papaEmeritus.jumpState = JUMP_STATE.GROUNDED;
-							}
-					 
-				//Jump Fall state	 
-				 case JUMP_FALLING:
-					 System.out.print("JUMP_FALL");
-			  papaEmeritus.position.y = rock.position.y +
-				  papaEmeritus.bounds.height + papaEmeritus.origin.y;
-				  papaEmeritus.jumpState = JUMP_STATE.GROUNDED;
-			break;
-				case JUMP_RISING:
-				  papaEmeritus.position.y = rock.position.y +
-				  papaEmeritus.bounds.height + papaEmeritus.origin.y +1;
-				break;
-			}
+//level.papaEmeritus.grounded = true;
+//jumpPressed = false;
 	}
 	private void onCollisionPapaWithSoul(Soul soul) {
 		soul.collected = true;
@@ -228,7 +210,7 @@ rock.position.x + rock.bounds.width / 2.0f;
 		AudioManager.instance.play(Assets.instance.sounds.pickupBook);
 		lives--; //decrement lives, 
 		if(!isGameOver()){ //if you don't just kill yourself
-		score *= score*2;//double score when book is picked up
+		score = score*2;//double score when book is picked up
 		level.papaEmeritus.setBookPowerup(true);
 		Gdx.app.log(TAG, "Book of Pain read");
 		}
@@ -256,7 +238,8 @@ rock.position.x + rock.bounds.width / 2.0f;
 		for (Rock rock : level.rocks) {
 		r2.set(rock.position.x, rock.position.y, rock.bounds.width,
 		rock.bounds.height);
-		if (!r1.overlaps(r2)) continue;
+		if (!r1.overlaps(r2)) 
+			continue;
 		
 		
 		onCollisionPapaWithRock(rock);
@@ -306,9 +289,9 @@ rock.position.x + rock.bounds.width / 2.0f;
 		handleInputGame(deltaTime);
 		}
 		level.update(deltaTime);
-		level.papaEmeritus.updateMotionY(deltaTime);
+		//particle effects were here
 		testCollisions();
-		b2world.step(deltaTime, 8, 3);
+		b2world.step(deltaTime, 4, 4);
 		cameraHelper.update(deltaTime);
 		if(!isGameOver() && isPlayerInWater()){
 			AudioManager.instance.play(Assets.instance.sounds.liveLost);
@@ -358,31 +341,45 @@ rock.position.x + rock.bounds.width / 2.0f;
 	 * Method to handle game input
 	 */
 	private void handleInputGame(float deltaTime){
+		Vector2 velocity = new Vector2(0,0);
+		level.papaEmeritus.playerPhysicsFixture.setFriction(0f);
 		if (cameraHelper.hasTarget(level.papaEmeritus)) {
 			// Player Movement
-			if (Gdx.input.isKeyPressed(Keys.LEFT)) {
-				//level.papaEmeritus.body.setLinearVelocity(-1.0f,0f);
-			level.papaEmeritus.velocity.x =
-			-level.papaEmeritus.terminalVelocity.x;
-			} else if (Gdx.input.isKeyPressed(Keys.RIGHT)) {
+			if (Gdx.input.isKeyPressed(Keys.A)) {
+				velocity.x -= 4;
+			
+			} else if (Gdx.input.isKeyPressed(Keys.D)) {
+				velocity.x += 4;
 				//level.papaEmeritus.body.setLinearVelocity(1.0f,0f);
-				level.papaEmeritus.velocity.x =
-			  level.papaEmeritus.terminalVelocity.x;
-			} else {
-			 // Execute auto-forward movement on non-desktop platform
+				//level.papaEmeritus.velocity.x =
+			  //level.papaEmeritus.terminalVelocity.x;
+			} 
+			
+			  //Execute auto-forward movement on non-desktop platform
 			if (Gdx.app.getType() != ApplicationType.Desktop) {
-			  level.papaEmeritus.velocity.x =
-			  level.papaEmeritus.terminalVelocity.x;
+	
 			 }
 			}
 			// Papa Jump
-			if (Gdx.input.isTouched() ||
+		//if(!jumpPressed) {
+			if (
 			Gdx.input.isKeyPressed(Keys.SPACE)) {
-			level.papaEmeritus.setJumping(true);
-			} else {
-			 level.papaEmeritus.setJumping(false);
-			  }
-			 }
+				//if(jumpTime > 0) {
+				//jumpPressed = true;
+//				if(level.papaEmeritus.grounded) {
+//			level.papaEmeritus.grounded = false;
+			
+			velocity.y += 8;
+			
+			level.papaEmeritus.body.applyLinearImpulse(velocity, level.papaEmeritus.body.getPosition(), true);
+			//jumpTime = jumpTime - 1;
+		
+			}
+		//	}
+				//}
+			//}
+			level.papaEmeritus.body.setLinearVelocity(velocity);
+			
 		}
 
 			
@@ -399,11 +396,6 @@ rock.position.x + rock.bounds.width / 2.0f;
 	}
 	
 
-	@Override
-	public boolean keyDown(int keycode) {
-		// TODO Auto-generated method stub
-		return false;
-	}
 
 	@Override
 	public boolean keyUp(int keycode) {
@@ -426,41 +418,7 @@ rock.position.x + rock.bounds.width / 2.0f;
 		return false;
 	}
 
-	@Override
-	public boolean keyTyped(char character) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public boolean touchUp(int screenX, int screenY, int pointer, int button) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public boolean touchDragged(int screenX, int screenY, int pointer) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public boolean mouseMoved(int screenX, int screenY) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public boolean scrolled(int amount) {
-		// TODO Auto-generated method stub
-		return false;
-	}
+	
 	@Override
 	public void dispose() {
 		if(b2world != null) b2world.dispose();
