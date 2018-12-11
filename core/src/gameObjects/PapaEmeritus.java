@@ -5,7 +5,13 @@ package gameObjects;
  *
  */
 import com.badlogic.gdx.Gdx;
+
 import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.physics.box2d.Body;
+import com.badlogic.gdx.physics.box2d.BodyDef;
+import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
+import com.badlogic.gdx.physics.box2d.Fixture;
+import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.graphics.g2d.ParticleEffect;
 
 import utils.AudioManager;
@@ -14,7 +20,9 @@ import utils.GamePreferences;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import gameWorld.Assets;
+import gameWorld.WorldController;
 import utils.Constants;
+
 public class PapaEmeritus extends AbstractGameObject{
 	public static final String TAG = Character.class.getName();
 	
@@ -29,9 +37,10 @@ public class PapaEmeritus extends AbstractGameObject{
 	private TextureRegion regPapa;
 	public VIEW_DIRECTION viewDirection;
 	public float timeJumping;
-	public JUMP_STATE jumpState;
+	public boolean grounded = true;
 	public boolean hasBookPowerup;
 	public ParticleEffect dustParticles = new ParticleEffect();
+	public Fixture playerPhysicsFixture;
 	/**
 	 * Awaken Papa
 	 */
@@ -46,7 +55,21 @@ public class PapaEmeritus extends AbstractGameObject{
 		origin.set(dimension.x / 2, dimension.y / 2);
 		// Bounding box for collision detection
 		bounds.set(0, 0, dimension.x, dimension.y);
-		// Set physics values
+		//Create the body
+		bodyDef = new BodyDef();
+		bodyDef.type = BodyType.DynamicBody;
+		
+		Body box = WorldController.b2world.createBody(bodyDef);
+		PolygonShape poly = new PolygonShape();
+		poly.setAsBox(0.5f, 0.5f);
+		playerPhysicsFixture = box.createFixture(poly,1);
+		poly.dispose();
+		
+		body = box;
+		body.setUserData(this);
+		
+		/**
+		 * // Set physics values
 		terminalVelocity.set(3.0f, 4.0f);
 		friction.set(12.0f, 0.0f);
 		acceleration.set(0.0f, -25.0f);
@@ -57,65 +80,12 @@ public class PapaEmeritus extends AbstractGameObject{
 		timeJumping = 0;
 		// Power-ups
 		hasBookPowerup = false;
+		*/
 		//Particle effect
 		dustParticles.load(Gdx.files.internal("particles/dust.pfx"), 
 				Gdx.files.internal("particles"));
 	}
-	public void setJumping (boolean jumpKeyPressed) {
-		switch (jumpState) {
-		 case GROUNDED: // Character is standing on a platform
-		  if (jumpKeyPressed) {
-		  AudioManager.instance.play(Assets.instance.sounds.jump); 
-		   // Start counting jump time from the beginning
-		   timeJumping = 0;
-		   jumpState = JUMP_STATE.JUMP_RISING;
-		}
-		break;
-		case JUMP_RISING: // Rising in the air
-		  if (!jumpKeyPressed)
-		  jumpState = JUMP_STATE.JUMP_FALLING;
-		  break;
-		case FALLING:// Falling down
-			//books don't make you fly, needs tweaked or
-			//removed
-		case JUMP_FALLING: // Falling down after jump
-//			if (jumpKeyPressed && hasBookPowerup) {
-//				timeJumping = JUMP_TIME_OFFSET_FLYING;
-//				jumpState = JUMP_STATE.JUMP_RISING;
-//				}
-				break;
-//				}
-				}
-	}
-	@Override
-	public void updateMotionY(float deltaTime) {
-		dustParticles.update(deltaTime); //update the particles 
-		switch(jumpState) {
-		case GROUNDED:
-			jumpState = JUMP_STATE.FALLING;
-			if(velocity.x !=0) {	
-			}
-		case JUMP_RISING:
-			timeJumping += deltaTime;
-			if(timeJumping <= JUMP_TIME_MAX) {
-				velocity.y = terminalVelocity.y;
-			}
-			break;
-		case FALLING:
-		    break;
-		case JUMP_FALLING:
-			//add delta to track jump time
-			timeJumping += deltaTime;
-			//jump to min height
-			if(timeJumping > 0 && timeJumping <= JUMP_TIME_MIN) {
-				velocity.y = -terminalVelocity.y;
-			}
-		}
-		if(jumpState != JUMP_STATE.GROUNDED) {
-			dustParticles.allowCompletion();
-			super.updateMotionY(deltaTime);
-		}
-	}
+
 	/**
 	 * What to do when the book 
 	 * is picked up
@@ -149,7 +119,8 @@ public class PapaEmeritus extends AbstractGameObject{
 		//Draw
 		// Draw image
 		reg = regPapa;
-		 batch.draw(reg.getTexture(), position.x, position.y, origin.x,
+		float off = .5f;
+		 batch.draw(reg.getTexture(), position.x -off, position.y -off, origin.x,
 		origin.y, dimension.x, dimension.y, scale.x, scale.y, rotation,
 		reg.getRegionX(), reg.getRegionY(), reg.getRegionWidth(),
 		reg.getRegionHeight(), viewDirection == VIEW_DIRECTION.LEFT,
