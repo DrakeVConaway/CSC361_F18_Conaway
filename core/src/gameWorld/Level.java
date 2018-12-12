@@ -148,8 +148,8 @@ public class Level {
 				   int g = 0xff & (currentPixel >>> 16); //green color channel
 				   int b = 0xff & (currentPixel >>> 8); //blue color channel
 				   int a = 0xff & currentPixel; //alpha channel
-				   Gdx.app.error(TAG, "Unknown object at x<" + pixelX + "> y<"
-				   + pixelY + ">: r<" + r+ "> g<" + g + "> b<" + b + "> a<" + a + ">");
+				  // Gdx.app.error(TAG, "Unknown object at x<" + pixelX + "> y<"
+				  // + pixelY + ">: r<" + r+ "> g<" + g + "> b<" + b + "> a<" + a + ">");
 				   
 			   }
 			   lastPixel = currentPixel;

@@ -86,6 +86,7 @@ public class WorldController extends InputAdapter implements Disposable {
 		level = new Level(Constants.LEVEL_01); //set level to this, if more than
 											   //one level, will need tweaked
 		cameraHelper.setTarget(level.papaEmeritus);
+		
 		initPhysics();
 	}
 	/**
@@ -180,7 +181,7 @@ public class WorldController extends InputAdapter implements Disposable {
 float heightDifference = Math.abs(papaEmeritus.position.y
 - ( rock.position.y + rock.bounds.height));
    boolean hitLeftEdge = false;
- 
+  
 if (heightDifference > .25f) {//was .25 
 	 hitLeftEdge = papaEmeritus.position.x > 
 rock.position.x + rock.bounds.width / 2.0f;
@@ -196,23 +197,24 @@ rock.position.x + rock.bounds.width / 2.0f;
 			
 				return;
 			}
-//level.papaEmeritus.grounded = true;
-//jumpPressed = false;
+
 	}
 	private void onCollisionPapaWithSoul(Soul soul) {
 		soul.collected = true;
 		AudioManager.instance.play(Assets.instance.sounds.pickupSoul);
 		score+= soul.getScore();
-		Gdx.app.log(TAG, "Soul reclaimed");
+		System.out.println("Soul reclaimed");
 	}
 	private void onCollisionPapaWithBook(BookOfPain book) {
 		book.collected= true;
 		AudioManager.instance.play(Assets.instance.sounds.pickupBook);
+		
+				
 		lives--; //decrement lives, 
 		if(!isGameOver()){ //if you don't just kill yourself
 		score = score*2;//double score when book is picked up
 		level.papaEmeritus.setBookPowerup(true);
-		Gdx.app.log(TAG, "Book of Pain read");
+		System.out.println("Book of Pain read");
 		}
 		
 	}
@@ -284,7 +286,9 @@ rock.position.x + rock.bounds.width / 2.0f;
 		handleDebugInput(deltaTime);
 		if (isGameOver()) {
 			timeLeftGameOverDelay -= deltaTime; //menu code needed
-			if (timeLeftGameOverDelay < 0) backToMenu(); //return to menu when over
+			if (timeLeftGameOverDelay < 0) 
+				System.out.println("Your score is " + score);
+			backToMenu(); //return to menu when over
 		} else {
 		handleInputGame(deltaTime);
 		}
@@ -302,6 +306,7 @@ rock.position.x + rock.bounds.width / 2.0f;
 				initLevel();
 		}
 		level.mountains.updateScrollPosition(cameraHelper.getPosition());
+		level.papaEmeritus.dustParticles.update(deltaTime);
 	}
 
 	private void handleDebugInput(float deltaTime) {
@@ -349,10 +354,11 @@ rock.position.x + rock.bounds.width / 2.0f;
 				velocity.x -= 4;
 			
 			} else if (Gdx.input.isKeyPressed(Keys.D)) {
+				
 				velocity.x += 4;
-				//level.papaEmeritus.body.setLinearVelocity(1.0f,0f);
-				//level.papaEmeritus.velocity.x =
-			  //level.papaEmeritus.terminalVelocity.x;
+				level.papaEmeritus.dustParticles.setPosition(level.papaEmeritus.position.x + level.papaEmeritus.dimension.x / 2,
+						level.papaEmeritus.position.y);
+						level.papaEmeritus.dustParticles.start();
 			} 
 			
 			  //Execute auto-forward movement on non-desktop platform
@@ -360,24 +366,16 @@ rock.position.x + rock.bounds.width / 2.0f;
 	
 			 }
 			}
-			// Papa Jump
-		//if(!jumpPressed) {
 			if (
 			Gdx.input.isKeyPressed(Keys.SPACE)) {
-				//if(jumpTime > 0) {
-				//jumpPressed = true;
-//				if(level.papaEmeritus.grounded) {
-//			level.papaEmeritus.grounded = false;
-			
 			velocity.y += 8;
-			
 			level.papaEmeritus.body.applyLinearImpulse(velocity, level.papaEmeritus.body.getPosition(), true);
-			//jumpTime = jumpTime - 1;
+		
 		
 			}
-		//	}
-				//}
-			//}
+	
+		
+		
 			level.papaEmeritus.body.setLinearVelocity(velocity);
 			
 		}

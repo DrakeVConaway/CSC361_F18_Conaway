@@ -84,6 +84,7 @@ public class PapaEmeritus extends AbstractGameObject{
 		//Particle effect
 		dustParticles.load(Gdx.files.internal("particles/dust.pfx"), 
 				Gdx.files.internal("particles"));
+		
 	}
 
 	/**
@@ -94,7 +95,7 @@ public class PapaEmeritus extends AbstractGameObject{
 	public void setBookPowerup (boolean pickedUp) {
 		hasBookPowerup = pickedUp;
 		if (pickedUp) {
-		//empty for now, will manipulate lives
+			
 			return;
 		}
 	}
@@ -129,6 +130,7 @@ public class PapaEmeritus extends AbstractGameObject{
 		// Reset color to white
 		batch.setColor(1, 1, 1, 1);
 		//Draw particles
+		
 		dustParticles.draw(batch);
 		}
 }
